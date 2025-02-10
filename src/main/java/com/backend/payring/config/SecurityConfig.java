@@ -26,7 +26,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",   // Swagger API 문서
                                 "/swagger-ui/**",    // Swagger UI
                                 "/swagger-ui.html",   // Swagger UI HTML 페이지
-                                "/api/temp"
+                                "/api/temp",
+                                "/api/rooms/**"
                         ).permitAll()  // 인증 없이 접근 가능하도록 설정
                         .anyRequest().authenticated() // 나머지는 인증 필요
                 );

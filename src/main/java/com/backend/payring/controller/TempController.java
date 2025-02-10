@@ -25,7 +25,7 @@ public class TempController {
             summary = "예시 API 제목",
             description = "예시 API 상세 설명"
     )
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ResponseDTO<?>> singUpLocal(@RequestBody @Valid TempCreateDTO.Req req) {
 
         TempCreateDTO.Res res = tempService.createTemp(req);

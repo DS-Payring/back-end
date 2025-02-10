@@ -22,10 +22,12 @@ public class RoomEntity extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "room_status")
     private RoomStatus roomStatus;
 
-    @Column(nullable = false, name = "ended_at")
+
+    @Column(name = "ended_at")
     private LocalDateTime endedAt;
 
     @Column(nullable = false, name = "room_image")

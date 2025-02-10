@@ -29,6 +29,9 @@ public class PaymentEntity extends BaseEntity{
     @Column(name = "payment_image")
     private String paymentImage;
 
+    @Column(name = "is_transfer")
+    private Boolean isTransfer;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "room_id")
     private RoomEntity room;
@@ -39,4 +42,8 @@ public class PaymentEntity extends BaseEntity{
 
     @OneToMany(mappedBy = "payment",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransferEntity> transfers = new ArrayList<>();
+
+    public void updatePaymentImage (String url) {
+        this.paymentImage = url;
+    }
 }

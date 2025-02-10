@@ -31,6 +31,8 @@ public enum ErrorCode {
     /**
      * 404
      */
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
+    ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "방을 찾을 수 없습니다."),
 
 
     /**

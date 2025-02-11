@@ -58,11 +58,23 @@ public class PaymentController {
     )
     @GetMapping("/payments/{paymentId}")
     public ResponseEntity<ResponseDTO<?>> getPaymentDetail (@PathVariable("paymentId") Long paymentId) {
-        System.out.println(paymentId);
         GetPaymentDTO.PaymentDetail res = paymentService.getPaymentDetail(paymentId);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_PAYMENT.getStatus().value())
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_PAYMENT, res));
+    }
+
+    @Operation(
+            summary = "정산 금액 삭제 API (정산 신청 전)",
+            description = "등록한 정산을 삭제합니다."
+    )
+    @DeleteMapping("/payments/{paymentId}")
+    public ResponseEntity<ResponseDTO<?>> deletePayment (@PathVariable("paymentId") Long paymentId) {
+        paymentService.deletePayment(paymentId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_DELETE_PAYMENT.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_DELETE_PAYMENT, null));
     }
 }

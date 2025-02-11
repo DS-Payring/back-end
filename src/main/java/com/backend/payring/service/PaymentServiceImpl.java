@@ -81,4 +81,13 @@ public class PaymentServiceImpl implements PaymentService {
 
         return PaymentConverter.toPaymentDetail(payment);
     }
+
+    @Override
+    @Transactional
+    public void deletePayment(Long paymentId) {
+        PaymentEntity payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        paymentRepository.delete(payment);
+    }
 }

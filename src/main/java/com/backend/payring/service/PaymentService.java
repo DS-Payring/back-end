@@ -10,4 +10,6 @@ public interface PaymentService {
     GetPaymentDTO.PaymentList getPaymentList(Long roomId);
 
     GetPaymentDTO.PaymentDetail getPaymentDetail(Long paymentId);
+
+    void deletePayment(Long paymentId);
 }

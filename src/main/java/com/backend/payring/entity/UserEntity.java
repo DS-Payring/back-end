@@ -29,6 +29,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "profile_image")
     private String profileImage;
 
+    @Column
+    private String payUrl;
+
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountEntity> accounts = new ArrayList<>();
 

@@ -30,7 +30,9 @@ public class UserTransferStatusDTO {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UserStatus {
+        // 내가 받지 않음
         private List<NotReceived> notReceived;
+        // 내가 보내지 않음
         private List<NotSent> notSent;
     }
 }

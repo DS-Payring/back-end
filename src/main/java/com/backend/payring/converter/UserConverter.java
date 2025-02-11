@@ -1,8 +1,6 @@
 package com.backend.payring.converter;
 
 import com.backend.payring.dto.transfer.CompletedUserDTO;
-import com.backend.payring.dto.transfer.VerifyTransferDTO;
-import com.backend.payring.entity.TransferEntity;
 import com.backend.payring.entity.UserEntity;
 
 import java.util.List;

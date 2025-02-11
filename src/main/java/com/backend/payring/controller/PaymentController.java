@@ -136,7 +136,7 @@ public class PaymentController {
         UserTransferStatusDTO.UserStatus res = paymentService.getUserTransferStatus(roomId, userId);
 
         return ResponseEntity
-                .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())
-                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
+                .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_TRANSFER, res));
     }
 }

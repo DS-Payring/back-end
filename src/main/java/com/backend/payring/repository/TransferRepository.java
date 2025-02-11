@@ -21,4 +21,7 @@ public interface TransferRepository extends JpaRepository<TransferEntity, Long> 
     List<TransferEntity> findByRoomIdAndSenderIdAndIsCompleteFalse(Long roomId, Long userId);
 
     List<TransferEntity> findByRoomIdAndReceiverIdAndIsCompleteFalse(Long roomId, Long userId);
+
+    List<TransferEntity> findByRoomIdAndSenderIdAndIsCompleteTrue(Long roomId, Long senderId);
+
 }

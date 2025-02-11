@@ -3,9 +3,10 @@ package com.backend.payring.service;
 import com.backend.payring.code.ErrorCode;
 import com.backend.payring.converter.TransferConverter;
 import com.backend.payring.dto.transfer.ReceiverDTO;
+import com.backend.payring.dto.transfer.SendDTO;
+import com.backend.payring.dto.transfer.UserTransferStatusDTO;
 import com.backend.payring.dto.transfer.VerifyTransferDTO;
 import com.backend.payring.entity.*;
-import com.backend.payring.exception.PaymentException;
 import com.backend.payring.exception.TransferException;
 import com.backend.payring.repository.AccountRepository;
 import com.backend.payring.repository.PaymentRepository;
@@ -16,8 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -73,4 +74,25 @@ public class TransferServiceImpl implements TransferService{
 
         return TransferConverter.toVerifyRes(transfer);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public SendDTO.Sender getSenderTransferStatus(Long roomId, Long userId) {
+        List<TransferEntity> notSentTransfers = transferRepository.findByRoomIdAndSenderIdAndIsCompleteFalse(roomId, userId);
+
+        List<TransferEntity> sentTransfers = transferRepository.findByRoomIdAndSenderIdAndIsCompleteTrue(roomId, userId);
+
+        // 아직 보내지 않은 송금 리스트
+        List<UserTransferStatusDTO.NotSent> notSentList = notSentTransfers.stream()
+                .map(TransferConverter::toNotSent)
+                .collect(Collectors.toList());
+
+        // 이미 보낸 송금 리스트
+        List<SendDTO.Sent> sentList = sentTransfers.stream()
+                .map(TransferConverter::toSent)
+                .collect(Collectors.toList());
+
+        return TransferConverter.toSender(notSentList, sentList);
+    }
+
 }

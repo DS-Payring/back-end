@@ -1,10 +1,6 @@
 package com.backend.payring.converter;
 
-import com.amazonaws.services.s3.transfer.Transfer;
-import com.backend.payring.dto.transfer.ReceiverDTO;
-import com.backend.payring.dto.transfer.UnCompletedUserDTO;
-import com.backend.payring.dto.transfer.UserTransferStatusDTO;
-import com.backend.payring.dto.transfer.VerifyTransferDTO;
+import com.backend.payring.dto.transfer.*;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.RoomEntity;
 import com.backend.payring.entity.TransferEntity;
@@ -100,6 +96,23 @@ public class TransferConverter {
         return UserTransferStatusDTO.UserStatus.builder()
                 .notReceived(notReceivedList)
                 .notSent(notSentList)
+                .build();
+    }
+
+
+    public static SendDTO.Sent toSent(TransferEntity transfer) {
+        return SendDTO.Sent.builder()
+                .transferId(transfer.getId())
+                .transferImage(transfer.getTransferImage()) // 송금 확인 이미지
+                .receiverName(transfer.getReceiver().getUserName()) // 수취인 이름
+                .receiverImage(transfer.getReceiver().getProfileImage()) // 수취인 프로필 이미지
+                .build();
+    }
+
+    public static SendDTO.Sender toSender (List<UserTransferStatusDTO.NotSent> notSentList, List<SendDTO.Sent> sentList) {
+        return SendDTO.Sender.builder()
+                .notSents(notSentList)
+                .sents(sentList)
                 .build();
     }
 

@@ -4,8 +4,7 @@ import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.response.ResponseDTO;
-import com.backend.payring.dto.temp.TempCreateDTO;
-import com.backend.payring.dto.transfer.ReceiverDTO;
+import com.backend.payring.dto.transfer.CompleteUserDTO;
 import com.backend.payring.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -14,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -91,5 +92,20 @@ public class PaymentController {
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_DIVIDE_PAYMENT.getStatus().value())
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_DIVIDE_PAYMENT, null));
+    }
+
+
+    @Operation(
+            summary = "정산 완료한 팀원 리스트 조회 API",
+            description = "방 내에서 송금할 내역이 없거나, 송금을 완료한 유저를 조회합니다."
+    )
+    @GetMapping("/{roomId}/payments/finish")
+    public ResponseEntity<ResponseDTO<?>> getFinishTeamMemberList(@PathVariable("roomId") Long roomId) {
+
+        List<CompleteUserDTO.UserInfo> res = paymentService.getFinishTeamMemberList(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
     }
 }

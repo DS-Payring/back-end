@@ -3,17 +3,16 @@ package com.backend.payring.service;
 import com.backend.payring.code.ErrorCode;
 import com.backend.payring.converter.PaymentConverter;
 import com.backend.payring.converter.TransferConverter;
+import com.backend.payring.converter.UserConverter;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
+import com.backend.payring.dto.transfer.CompleteUserDTO;
 import com.backend.payring.entity.*;
 import com.backend.payring.entity.enums.RoomStatus;
 import com.backend.payring.exception.PaymentException;
 import com.backend.payring.exception.RoomException;
 import com.backend.payring.exception.UserException;
-import com.backend.payring.repository.PaymentRepository;
-import com.backend.payring.repository.RoomRepository;
-import com.backend.payring.repository.TransferRepository;
-import com.backend.payring.repository.UserRepository;
+import com.backend.payring.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +36,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
     private final TransferRepository transferRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
     public PaymentCreateDTO.Res createPayment(PaymentCreateDTO.Req req, MultipartFile image) {
@@ -188,6 +189,39 @@ public class PaymentServiceImpl implements PaymentService {
         room.updateSettleAmount(totalSettleAmount);
         roomRepository.save(room);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<CompleteUserDTO.UserInfo> getFinishTeamMemberList(Long roomId) {
+        List<TeamMemberEntity> teamMembers = teamMemberRepository.findAllByRoomId(roomId);
+
+        // 팀원의 userId 조회
+        List<Long> teamMemberIds = teamMembers.stream()
+                .map(member -> member.getUser().getId())
+                .toList();
+
+        // 정산 완료된 sender
+        List<Long> settledSenderIds = transferRepository.findCompletedSenders(roomId);
+
+        // 모든 sender
+        List<Long> allSenders = transferRepository.findDistinctSenderIds(roomId);
+
+        // 송금한 적 없는 유저
+        List<Long> nonSenders = teamMemberIds.stream()
+                .filter(userId -> !allSenders.contains(userId))
+                .toList();
+
+        // 송금 완료된 유저 + 송금할 필요 없는 유저
+        List<Long> finalUserIds = new ArrayList<>();
+        finalUserIds.addAll(settledSenderIds);
+        finalUserIds.addAll(nonSenders);
+
+        List<UserEntity> users = userRepository.findByIdIn(finalUserIds);
+
+        return UserConverter.toUserInfoList(users);
+    }
+
+
 
 
 }

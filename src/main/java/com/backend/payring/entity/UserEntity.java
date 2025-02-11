@@ -17,6 +17,9 @@ public class UserEntity extends BaseEntity {
     @Column(name = "user_id")
     private Long id;
 
+    @Column(nullable = false)
+    private String userName;
+
     @Column(unique = true, nullable = false)
     private String email;
 
@@ -37,4 +40,7 @@ public class UserEntity extends BaseEntity {
 
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransferEntity> transfers = new ArrayList<>();
+
+    private String emailVerificationNum;
+    private boolean emailVerified;
 }

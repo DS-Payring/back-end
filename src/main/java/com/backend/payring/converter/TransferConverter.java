@@ -3,6 +3,7 @@ package com.backend.payring.converter;
 import com.amazonaws.services.s3.transfer.Transfer;
 import com.backend.payring.dto.transfer.ReceiverDTO;
 import com.backend.payring.dto.transfer.UnCompletedUserDTO;
+import com.backend.payring.dto.transfer.UserTransferStatusDTO;
 import com.backend.payring.dto.transfer.VerifyTransferDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.RoomEntity;
@@ -76,6 +77,29 @@ public class TransferConverter {
                 .receiverId(receiverId)
                 .receiverName(transfer.getReceiver().getUserName())
                 .amount(amount)
+                .build();
+    }
+
+    public static UserTransferStatusDTO.NotSent toNotSent(TransferEntity transfer) {
+        return UserTransferStatusDTO.NotSent.builder()
+                .transferId(transfer.getId())
+                .receiver(transfer.getReceiver().getUserName())
+                .amount(transfer.getAmount())
+                .build();
+    }
+
+    public static UserTransferStatusDTO.NotReceived toNotReceived(TransferEntity transfer) {
+        return UserTransferStatusDTO.NotReceived.builder()
+                .transferId(transfer.getId())
+                .sender(transfer.getSender().getUserName())
+                .amount(transfer.getAmount())
+                .build();
+    }
+
+    public static UserTransferStatusDTO.UserStatus toUserStatus(List<UserTransferStatusDTO.NotSent> notSentList,  List<UserTransferStatusDTO.NotReceived> notReceivedList) {
+        return UserTransferStatusDTO.UserStatus.builder()
+                .notReceived(notReceivedList)
+                .notSent(notSentList)
                 .build();
     }
 

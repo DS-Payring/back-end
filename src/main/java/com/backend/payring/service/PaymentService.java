@@ -4,6 +4,7 @@ import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.transfer.CompletedUserDTO;
 import com.backend.payring.dto.transfer.UnCompletedUserDTO;
+import com.backend.payring.dto.transfer.UserTransferStatusDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface PaymentService {
     List<CompletedUserDTO.UserInfo> getFinishTeamMemberList(Long roomId);
 
     List<UnCompletedUserDTO.SenderInfo> getUnFinishedTeamMemberList(Long roomId);
+
+    UserTransferStatusDTO.UserStatus getUserTransferStatus(Long roomId, Long userId);
 }

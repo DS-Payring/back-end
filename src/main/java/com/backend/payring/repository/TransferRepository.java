@@ -17,4 +17,8 @@ public interface TransferRepository extends JpaRepository<TransferEntity, Long> 
 
     @Query("SELECT t FROM TransferEntity t WHERE t.room.id = :roomId AND t.isComplete = false")
     List<TransferEntity> findUnCompletedTransfers(@Param("roomId") Long roomId);
+
+    List<TransferEntity> findByRoomIdAndSenderIdAndIsCompleteFalse(Long roomId, Long userId);
+
+    List<TransferEntity> findByRoomIdAndReceiverIdAndIsCompleteFalse(Long roomId, Long userId);
 }

@@ -8,6 +8,7 @@ import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.transfer.CompletedUserDTO;
 import com.backend.payring.dto.transfer.UnCompletedUserDTO;
+import com.backend.payring.dto.transfer.UserTransferStatusDTO;
 import com.backend.payring.entity.*;
 import com.backend.payring.entity.enums.RoomStatus;
 import com.backend.payring.exception.PaymentException;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -249,6 +251,29 @@ public class PaymentServiceImpl implements PaymentService {
 
         return new ArrayList<>(senderInfoMap.values());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserTransferStatusDTO.UserStatus getUserTransferStatus(Long roomId, Long userId) {
+        // isComplete == false & sender == userId & roomId
+        List<TransferEntity> notSentTransfers = transferRepository.findByRoomIdAndSenderIdAndIsCompleteFalse(roomId, userId);
+
+        // isComplete == false & receiver == user & roomId
+        List<TransferEntity> notReceivedTransfers = transferRepository.findByRoomIdAndReceiverIdAndIsCompleteFalse(roomId, userId);
+
+        // 아직 보내지 않은 정산 리스트
+        List<UserTransferStatusDTO.NotSent> notSentList = notSentTransfers.stream()
+                .map(TransferConverter::toNotSent)
+                .collect(Collectors.toList());
+
+        // 아직 받지 못한 정산 리스트
+        List<UserTransferStatusDTO.NotReceived> notReceivedList = notReceivedTransfers.stream()
+                .map(TransferConverter::toNotReceived)
+                .collect(Collectors.toList());
+
+        return TransferConverter.toUserStatus(notSentList, notReceivedList);
+    }
+
 
 
 

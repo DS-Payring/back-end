@@ -5,6 +5,7 @@ import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.transfer.CompletedUserDTO;
+import com.backend.payring.dto.transfer.UnCompletedUserDTO;
 import com.backend.payring.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -100,9 +101,23 @@ public class PaymentController {
             description = "방 내에서 송금할 내역이 없거나, 송금을 완료한 유저를 조회합니다."
     )
     @GetMapping("/{roomId}/payments/finish")
-    public ResponseEntity<ResponseDTO<?>> getFinishTeamMemberList(@PathVariable("roomId") Long roomId) {
+    public ResponseEntity<ResponseDTO<?>> getFinishedTeamMemberList(@PathVariable("roomId") Long roomId) {
 
         List<CompletedUserDTO.UserInfo> res = paymentService.getFinishTeamMemberList(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
+    }
+
+    @Operation(
+            summary = "아직 정산 중인 팀원 리스트 조회 API",
+            description = "송금 상태가 완료되지 않은 유저를 조회합니다."
+    )
+    @GetMapping("/{roomId}/payments/in-progress")
+    public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(@PathVariable("roomId") Long roomId) {
+
+        List<UnCompletedUserDTO.SenderInfo> res = paymentService.getUnFinishedTeamMemberList(roomId);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())

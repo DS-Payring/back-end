@@ -2,12 +2,14 @@ package com.backend.payring.converter;
 
 import com.amazonaws.services.s3.transfer.Transfer;
 import com.backend.payring.dto.transfer.ReceiverDTO;
+import com.backend.payring.dto.transfer.UnCompletedUserDTO;
 import com.backend.payring.dto.transfer.VerifyTransferDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.RoomEntity;
 import com.backend.payring.entity.TransferEntity;
 import com.backend.payring.entity.UserEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +58,24 @@ public class TransferConverter {
                 .amount(transfer.getAmount())
                 .transferImage(transfer.getTransferImage())
                 .isComplete(transfer.getIsComplete())
+                .build();
+    }
+
+    public static UnCompletedUserDTO.SenderInfo toSenderInfo(UserEntity sender) {
+        return UnCompletedUserDTO.SenderInfo.builder()
+                .userId(sender.getId())
+                .userName(sender.getUserName())
+                .profileImage(sender.getProfileImage())
+                .totalLeftAmount(0) // 일단 0으로 초기화
+                .receiverInfos(new ArrayList<>()) // 빈 리스트로 초기화
+                .build();
+    }
+
+    public static UnCompletedUserDTO.ReceiverInfo toReceiverInfo(Long receiverId, TransferEntity transfer, Integer amount) {
+        return UnCompletedUserDTO.ReceiverInfo.builder()
+                .receiverId(receiverId)
+                .receiverName(transfer.getReceiver().getUserName())
+                .amount(amount)
                 .build();
     }
 

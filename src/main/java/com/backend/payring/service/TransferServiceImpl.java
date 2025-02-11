@@ -46,12 +46,16 @@ public class TransferServiceImpl implements TransferService{
     @Transactional
     public VerifyTransferDTO.Res verifyTransfer(Long transferId, MultipartFile image) {
         // 이미지가 없으면 예외 처리
-        if (image != null) {
+        if (image == null) {
             throw new TransferException(ErrorCode.IMAGE_REQUIRED);
         }
 
         TransferEntity transfer = transferRepository.findById(transferId)
                 .orElseThrow(() -> new TransferException(ErrorCode.TRANSFER_NOT_FOUND));
+
+        if (transfer.getIsComplete()) {
+            throw new TransferException(ErrorCode.ALREADY_COMPLETED_TRANSFER);
+        }
 
         String url = "transfer url";
 // 인증 구현되면 s3 업로드 로직 추가하기

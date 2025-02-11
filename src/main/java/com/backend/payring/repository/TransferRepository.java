@@ -15,4 +15,6 @@ public interface TransferRepository extends JpaRepository<TransferEntity, Long> 
     @Query("SELECT DISTINCT t.sender.id FROM TransferEntity t WHERE t.room.id = :roomId")
     List<Long> findDistinctSenderIds(@Param("roomId") Long roomId);
 
+    @Query("SELECT t FROM TransferEntity t WHERE t.room.id = :roomId AND t.isComplete = false")
+    List<TransferEntity> findUnCompletedTransfers(@Param("roomId") Long roomId);
 }

@@ -16,6 +16,7 @@ public enum ErrorCode {
     NO_PAYMENT(HttpStatus.BAD_REQUEST,  "정산할 금액이 없어 정산을 시작할 수 없습니다."),
     NOT_COLLECTING(HttpStatus.BAD_REQUEST, "이미 정산이 시작되었거나 종료된 방입니다."),
     IMAGE_REQUIRED(HttpStatus.BAD_REQUEST, "송금 인증을 위해 이미지를 업로드해야 합니다."),
+    ALREADY_COMPLETED_TRANSFER(HttpStatus.BAD_REQUEST, "이미 승인된 송금 요청입니다."),
 
     /**
      * 401 UNAUTHORIZED: 토큰 만료

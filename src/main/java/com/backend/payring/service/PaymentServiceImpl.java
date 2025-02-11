@@ -7,6 +7,7 @@ import com.backend.payring.converter.UserConverter;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.transfer.CompletedUserDTO;
+import com.backend.payring.dto.transfer.UnCompletedUserDTO;
 import com.backend.payring.entity.*;
 import com.backend.payring.entity.enums.RoomStatus;
 import com.backend.payring.exception.PaymentException;
@@ -220,6 +221,34 @@ public class PaymentServiceImpl implements PaymentService {
         return UserConverter.toUserInfoList(users);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<UnCompletedUserDTO.SenderInfo> getUnFinishedTeamMemberList(Long roomId) {
+        // 아직 정산하지 않은 송금 내역
+        List<TransferEntity> unCompletedTransfers = transferRepository.findUnCompletedTransfers(roomId);
+
+        Map<Long, UnCompletedUserDTO.SenderInfo> senderInfoMap = new HashMap<>();
+
+        for (TransferEntity transfer : unCompletedTransfers) {
+            Long senderId = transfer.getSender().getId();
+            Long receiverId = transfer.getReceiver().getId();
+            int amount = transfer.getAmount();
+
+            if (!senderInfoMap.containsKey(senderId)) {
+                UserEntity sender = transfer.getSender();
+                senderInfoMap.put(senderId, TransferConverter.toSenderInfo(sender));
+            }
+
+            // 송금해야 할 대상 추가
+            UnCompletedUserDTO.SenderInfo senderInfo = senderInfoMap.get(senderId);
+            senderInfo.getReceiverInfos().add(TransferConverter.toReceiverInfo(receiverId, transfer, amount));
+
+            // 총 송금해야 하는 금액
+            senderInfo.updateTotalLeftAmount(senderInfo.getTotalLeftAmount() + amount);
+        }
+
+        return new ArrayList<>(senderInfoMap.values());
+    }
 
 
 

@@ -42,10 +42,24 @@ public class PaymentController {
             summary = "방별 정산 금액 요청 조회 API (정산 신청 전)",
             description = "방별 정산 금액 요청을 모두 조회합니다."
     )
-    @GetMapping("/{roomId}")
+    @GetMapping("/{roomId}/payments")
     public ResponseEntity<ResponseDTO<?>> getPaymentList (@PathVariable("roomId") Long roomId) {
 
         GetPaymentDTO.PaymentList res = paymentService.getPaymentList(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_PAYMENT.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_PAYMENT, res));
+    }
+
+    @Operation(
+            summary = "방별 정산 금액 요청 조회 API (정산 신청 전)",
+            description = "방별 정산 금액 요청을 모두 조회합니다."
+    )
+    @GetMapping("/payments/{paymentId}")
+    public ResponseEntity<ResponseDTO<?>> getPaymentDetail (@PathVariable("paymentId") Long paymentId) {
+        System.out.println(paymentId);
+        GetPaymentDTO.PaymentDetail res = paymentService.getPaymentDetail(paymentId);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_PAYMENT.getStatus().value())

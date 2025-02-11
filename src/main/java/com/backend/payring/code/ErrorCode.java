@@ -33,7 +33,7 @@ public enum ErrorCode {
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "방을 찾을 수 없습니다."),
-
+    PAYMENT_NOT_FOUND(HttpStatus.OK, "정산 요청을 찾을 수 없습니다."),
 
     /**
      * 406

@@ -8,4 +8,6 @@ public interface PaymentService {
     PaymentCreateDTO.Res createPayment(PaymentCreateDTO.Req req, MultipartFile image);
 
     GetPaymentDTO.PaymentList getPaymentList(Long roomId);
+
+    GetPaymentDTO.PaymentDetail getPaymentDetail(Long paymentId);
 }

@@ -19,7 +19,7 @@ public enum ResponseCode {
      * payment
      */
     SUCCESS_CREATE_PAYMENT(HttpStatus.OK, "payment를 성공적으로 생성했습니다."),
-
+    SUCCESS_RETRIEVE_PAYMENT(HttpStatus.OK, "payment를 성공적으로 조회했습니다."),
     /**
      * Temp
      */

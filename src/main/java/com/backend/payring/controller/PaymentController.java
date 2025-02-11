@@ -1,6 +1,7 @@
 package com.backend.payring.controller;
 
 import com.backend.payring.code.ResponseCode;
+import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.temp.TempCreateDTO;
@@ -35,5 +36,19 @@ public class PaymentController {
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_CREATE_PAYMENT.getStatus().value())
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_CREATE_PAYMENT, res));
+    }
+
+    @Operation(
+            summary = "방별 정산 금액 요청 조회 API (정산 신청 전)",
+            description = "방별 정산 금액 요청을 모두 조회합니다."
+    )
+    @GetMapping("/{roomId}")
+    public ResponseEntity<ResponseDTO<?>> getPaymentList (@PathVariable("roomId") Long roomId) {
+
+        GetPaymentDTO.PaymentList res = paymentService.getPaymentList(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_PAYMENT.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_PAYMENT, res));
     }
 }

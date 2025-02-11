@@ -12,4 +12,6 @@ public interface PaymentService {
     GetPaymentDTO.PaymentDetail getPaymentDetail(Long paymentId);
 
     void deletePayment(Long paymentId);
+
+    void startSettling(Long roomId);
 }

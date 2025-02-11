@@ -17,17 +17,23 @@ public class TransferEntity extends BaseEntity{
     @Column(nullable = false, name = "amount")
     private Integer amount;
 
-    @Column(nullable = false, name = "transfer_image")
+    @Column(name = "transfer_image")
     private String transferImage;
 
     @Column(name = "is_complete")
     private Boolean isComplete;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "payment_id")
-    private PaymentEntity payment;
+    @JoinColumn(nullable = false, name = "room_id")
+    private RoomEntity room;
 
+    // 발송인
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
-    private UserEntity user;
+    @JoinColumn(nullable = false, name = "sender_id")
+    private UserEntity sender;
+
+    // 수취인
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "receiver_id")
+    private UserEntity receiver;
 }

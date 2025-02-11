@@ -12,8 +12,9 @@ public enum ErrorCode {
      * 400 BAD_REQUEST: 잘못된 요청
      */
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
-
-
+    INVALID_AMOUNT(HttpStatus.BAD_REQUEST, "남은 정산 금액보다 큰 금액을 송금할 수 없습니다."),
+    NO_PAYMENT(HttpStatus.BAD_REQUEST,  "정산할 금액이 없어 정산을 시작할 수 없습니다."),
+    NOT_COLLECTING(HttpStatus.BAD_REQUEST, "이미 정산이 시작되었거나 종료된 방입니다."),
 
     /**
      * 401 UNAUTHORIZED: 토큰 만료

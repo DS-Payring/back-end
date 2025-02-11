@@ -1,8 +1,10 @@
 package com.backend.payring.converter;
 
+import com.amazonaws.services.s3.transfer.Transfer;
 import com.backend.payring.dto.transfer.ReceiverDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.RoomEntity;
+import com.backend.payring.entity.TransferEntity;
 import com.backend.payring.entity.UserEntity;
 
 import java.util.List;
@@ -36,5 +38,15 @@ public class TransferConverter {
                 .build();
     }
 
+    public static TransferEntity toTransfer(RoomEntity room, UserEntity sender, UserEntity receiver, Integer transferAmount) {
+        return TransferEntity.builder()
+                .room(room)
+                .sender(sender)
+                .receiver(receiver)
+                .amount(transferAmount)
+                .isComplete(false) // 처음 생성되면 송금 완료되지 않음
+                .transferImage(null) // 송금이 완료되지 않았으므로 이미지 null
+                .build();
+    }
 
 }

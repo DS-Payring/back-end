@@ -1,5 +1,6 @@
 package com.backend.payring.code;
 
+import com.backend.payring.dto.response.ErrorResponseDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -55,4 +56,14 @@ public enum ErrorCode {
 
     private final HttpStatus status;
     private final String message;
+
+    public ErrorResponseDTO getReasonHttpStatus() {
+        return ErrorResponseDTO.builder()
+                .message(message)
+                .status(status.value())
+                .isSuccess(false)
+                .error(this.name())
+                .build()
+                ;
+    }
 }

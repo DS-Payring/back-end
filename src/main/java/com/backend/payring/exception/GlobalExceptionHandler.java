@@ -2,7 +2,10 @@ package com.backend.payring.exception;
 
 
 import com.backend.payring.code.ErrorCode;
+import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.response.ErrorResponseDTO;
+import com.backend.payring.dto.response.ResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -10,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,11 +38,17 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponseDTO(ErrorCode.BAD_REQUEST, errors));
     }
 
-    @ExceptionHandler(TempException.class)
-    protected ResponseEntity<ErrorResponseDTO> handleNotLostException(final TempException e) {
+    @ExceptionHandler(GlobalException.class)
+    public ResponseEntity<Object> handleGeneralException(GlobalException e, HttpServletRequest request) {
+        ErrorResponseDTO errorReason = e.getErrorReasonHttpStatus();
+        System.out.println(errorReason);
+        return createErrorResponse(errorReason, request);
+    }
+
+    private ResponseEntity<Object> createErrorResponse(ErrorResponseDTO errorReason, HttpServletRequest request) {
         return ResponseEntity
-                .status(ErrorCode.TEMP_EXCEPTION.getStatus().value())
-                .body(new ErrorResponseDTO(ErrorCode.TEMP_EXCEPTION));
+                .status(errorReason.getStatus())
+                .body(errorReason);
     }
 
 }

@@ -20,7 +20,7 @@ public class RoomEntity extends BaseEntity{
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String roomName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, name = "room_status")

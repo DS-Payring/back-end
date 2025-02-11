@@ -2,6 +2,7 @@ package com.backend.payring.converter;
 
 import com.amazonaws.services.s3.transfer.Transfer;
 import com.backend.payring.dto.transfer.ReceiverDTO;
+import com.backend.payring.dto.transfer.VerifyTransferDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.RoomEntity;
 import com.backend.payring.entity.TransferEntity;
@@ -46,6 +47,15 @@ public class TransferConverter {
                 .amount(transferAmount)
                 .isComplete(false) // 처음 생성되면 송금 완료되지 않음
                 .transferImage(null) // 송금이 완료되지 않았으므로 이미지 null
+                .build();
+    }
+
+
+    public static VerifyTransferDTO.Res toVerifyRes(TransferEntity transfer) {
+        return VerifyTransferDTO.Res.builder()
+                .amount(transfer.getAmount())
+                .transferImage(transfer.getTransferImage())
+                .isComplete(transfer.getIsComplete())
                 .build();
     }
 

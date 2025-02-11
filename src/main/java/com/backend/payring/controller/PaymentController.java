@@ -4,7 +4,7 @@ import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.response.ResponseDTO;
-import com.backend.payring.dto.transfer.CompleteUserDTO;
+import com.backend.payring.dto.transfer.CompletedUserDTO;
 import com.backend.payring.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -102,7 +102,7 @@ public class PaymentController {
     @GetMapping("/{roomId}/payments/finish")
     public ResponseEntity<ResponseDTO<?>> getFinishTeamMemberList(@PathVariable("roomId") Long roomId) {
 
-        List<CompleteUserDTO.UserInfo> res = paymentService.getFinishTeamMemberList(roomId);
+        List<CompletedUserDTO.UserInfo> res = paymentService.getFinishTeamMemberList(roomId);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())

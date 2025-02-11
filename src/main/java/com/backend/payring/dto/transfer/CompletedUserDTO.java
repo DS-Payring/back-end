@@ -4,7 +4,7 @@ import lombok.*;
 
 import java.util.List;
 
-public class CompleteUserDTO {
+public class CompletedUserDTO {
 
     @Getter
     @Builder

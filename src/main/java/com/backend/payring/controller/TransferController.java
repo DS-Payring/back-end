@@ -4,12 +4,15 @@ import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.temp.TempCreateDTO;
 import com.backend.payring.dto.transfer.ReceiverDTO;
+import com.backend.payring.dto.transfer.VerifyTransferDTO;
 import com.backend.payring.service.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,7 +30,23 @@ public class TransferController {
         ReceiverDTO.TransferInfo res = transferService.getReceiverInfo(paymentId);
 
         return ResponseEntity
-                .status(ResponseCode.SUCCESS_CREATE_TEMP.getStatus().value())
-                .body(new ResponseDTO<>(ResponseCode.SUCCESS_CREATE_TEMP, res));
+                .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
+    }
+
+    @Operation(
+            summary = "송금 인증 API (인증 기능 미구현)",
+            description = "이미지를 업로드하여 송금을 인증합니다. 수취인, 금액이 일치하지 않으면 송금이 인증되지 않습니다."
+    )
+    @PostMapping(value = "/{transferId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseDTO<?>> verifyTransfer(
+            @PathVariable("transferId") Long transferId,
+            @RequestPart(value = "image") MultipartFile image
+    ) {
+        VerifyTransferDTO.Res res = transferService.verifyTransfer(transferId, image);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_VERIFY_TRANSFER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_VERIFY_TRANSFER, res));
     }
 }

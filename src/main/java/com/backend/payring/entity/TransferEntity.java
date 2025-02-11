@@ -36,4 +36,10 @@ public class TransferEntity extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "receiver_id")
     private UserEntity receiver;
+
+    // 송금 인증
+    public void verify(String imageUrl) {
+        this.transferImage = imageUrl;
+        this.isComplete = true;
+    }
 }

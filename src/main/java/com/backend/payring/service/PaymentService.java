@@ -2,7 +2,7 @@ package com.backend.payring.service;
 
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
-import com.backend.payring.dto.transfer.CompleteUserDTO;
+import com.backend.payring.dto.transfer.CompletedUserDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -18,5 +18,5 @@ public interface PaymentService {
 
     void startSettling(Long roomId);
 
-    List<CompleteUserDTO.UserInfo> getFinishTeamMemberList(Long roomId);
+    List<CompletedUserDTO.UserInfo> getFinishTeamMemberList(Long roomId);
 }

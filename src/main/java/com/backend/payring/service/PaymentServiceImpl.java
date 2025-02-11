@@ -6,7 +6,7 @@ import com.backend.payring.converter.TransferConverter;
 import com.backend.payring.converter.UserConverter;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
-import com.backend.payring.dto.transfer.CompleteUserDTO;
+import com.backend.payring.dto.transfer.CompletedUserDTO;
 import com.backend.payring.entity.*;
 import com.backend.payring.entity.enums.RoomStatus;
 import com.backend.payring.exception.PaymentException;
@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -192,7 +191,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CompleteUserDTO.UserInfo> getFinishTeamMemberList(Long roomId) {
+    public List<CompletedUserDTO.UserInfo> getFinishTeamMemberList(Long roomId) {
         List<TeamMemberEntity> teamMembers = teamMemberRepository.findAllByRoomId(roomId);
 
         // 팀원의 userId 조회

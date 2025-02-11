@@ -5,7 +5,7 @@ import com.backend.payring.dto.transfer.VerifyTransferDTO;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface TransferService {
-    ReceiverDTO.TransferInfo getReceiverInfo(Long paymentId);
+    ReceiverDTO.TransferInfo getReceiverInfo(Long transferId);
 
     VerifyTransferDTO.Res verifyTransfer(Long paymentId, MultipartFile image);
 }

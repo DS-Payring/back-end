@@ -30,12 +30,12 @@ public class TransferServiceImpl implements TransferService{
     private final S3Uploader s3Uploader;
 
     @Override
-    public ReceiverDTO.TransferInfo getReceiverInfo(Long paymentId) {
-        PaymentEntity payment = paymentRepository.findById(paymentId)
-                .orElseThrow(() -> new PaymentException(ErrorCode.PAYMENT_NOT_FOUND));
+    public ReceiverDTO.TransferInfo getReceiverInfo(Long transferId) {
+        TransferEntity transfer = transferRepository.findById(transferId)
+                .orElseThrow(() -> new TransferException(ErrorCode.TRANSFER_NOT_FOUND));
 
-        RoomEntity room = payment.getRoom();
-        UserEntity user = payment.getUser();
+        RoomEntity room = transfer.getRoom();
+        UserEntity user = transfer.getReceiver();
 
         List<AccountEntity> accounts = accountRepository.findAllByUser(user);
 

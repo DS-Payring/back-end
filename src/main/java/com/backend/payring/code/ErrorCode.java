@@ -1,5 +1,6 @@
 package com.backend.payring.code;
 
+import com.backend.payring.dto.response.ErrorResponseDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public enum ErrorCode {
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "방을 찾을 수 없습니다."),
-
+    PAYMENT_NOT_FOUND(HttpStatus.OK, "정산 요청을 찾을 수 없습니다."),
 
     /**
      * 406
@@ -55,4 +56,14 @@ public enum ErrorCode {
 
     private final HttpStatus status;
     private final String message;
+
+    public ErrorResponseDTO getReasonHttpStatus() {
+        return ErrorResponseDTO.builder()
+                .message(message)
+                .status(status.value())
+                .isSuccess(false)
+                .error(this.name())
+                .build()
+                ;
+    }
 }

@@ -2,10 +2,12 @@ package com.backend.payring.service;
 
 import com.backend.payring.code.ErrorCode;
 import com.backend.payring.converter.PaymentConverter;
+import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.entity.PaymentEntity;
 import com.backend.payring.entity.RoomEntity;
 import com.backend.payring.entity.UserEntity;
+import com.backend.payring.exception.PaymentException;
 import com.backend.payring.exception.RoomException;
 import com.backend.payring.exception.UserException;
 import com.backend.payring.repository.PaymentRepository;
@@ -13,12 +15,12 @@ import com.backend.payring.repository.RoomRepository;
 import com.backend.payring.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -58,5 +60,34 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepository.save(payment);
         return PaymentConverter.toRes(payment);
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GetPaymentDTO.PaymentList getPaymentList(Long roomId) {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
+
+        List<PaymentEntity> payments = paymentRepository.findAllByRoomOrderByIdDesc(room);
+
+        return PaymentConverter.toPaymentList(payments);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GetPaymentDTO.PaymentDetail getPaymentDetail(Long paymentId) {
+        PaymentEntity payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        return PaymentConverter.toPaymentDetail(payment);
+    }
+
+    @Override
+    @Transactional
+    public void deletePayment(Long paymentId) {
+        PaymentEntity payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new PaymentException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        paymentRepository.delete(payment);
     }
 }

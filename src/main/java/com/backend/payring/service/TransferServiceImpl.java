@@ -2,10 +2,7 @@ package com.backend.payring.service;
 
 import com.backend.payring.code.ErrorCode;
 import com.backend.payring.converter.TransferConverter;
-import com.backend.payring.dto.transfer.ReceiverDTO;
-import com.backend.payring.dto.transfer.SendDTO;
-import com.backend.payring.dto.transfer.UserTransferStatusDTO;
-import com.backend.payring.dto.transfer.VerifyTransferDTO;
+import com.backend.payring.dto.transfer.*;
 import com.backend.payring.entity.*;
 import com.backend.payring.exception.TransferException;
 import com.backend.payring.repository.AccountRepository;
@@ -94,5 +91,24 @@ public class TransferServiceImpl implements TransferService{
 
         return TransferConverter.toSender(notSentList, sentList);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ReceiveDTO.Receiver getReceiverTransferStatus(Long roomId, Long userId) {
+        List<TransferEntity> notReceivedTransfers = transferRepository.findByRoomIdAndReceiverIdAndIsCompleteFalse(roomId, userId);
+
+        List<TransferEntity> receivedTransfers = transferRepository.findByRoomIdAndReceiverIdAndIsCompleteTrue(roomId, userId);
+
+        List<UserTransferStatusDTO.NotReceived> notReceivedList = notReceivedTransfers.stream()
+                .map(TransferConverter::toNotReceived)
+                .collect(Collectors.toList());
+
+        List<ReceiveDTO.Receive> receivedList = receivedTransfers.stream()
+                .map(TransferConverter::toReceive)
+                .collect(Collectors.toList());
+
+        return TransferConverter.toReceiver(notReceivedList, receivedList);
+    }
+
 
 }

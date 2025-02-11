@@ -2,6 +2,7 @@ package com.backend.payring.controller;
 
 import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.response.ResponseDTO;
+import com.backend.payring.dto.transfer.ReceiveDTO;
 import com.backend.payring.dto.transfer.ReceiverDTO;
 import com.backend.payring.dto.transfer.SendDTO;
 import com.backend.payring.dto.transfer.VerifyTransferDTO;
@@ -50,7 +51,7 @@ public class TransferController {
     }
 
     @Operation(
-            summary = "내가 받은 송금 리스트 조회 + 내가 받지 않은 송금 리스트 조회 API",
+            summary = "내가 보낸 송금 리스트 조회 + 내가 보내지 않은 송금 리스트 조회 API",
             description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
     )
     @GetMapping("/{roomId}/transfers/send/{userId}") // userId 지우기
@@ -59,6 +60,22 @@ public class TransferController {
             @PathVariable("userId") Long userId
     ) {
         SendDTO.Sender res = transferService.getSenderTransferStatus(roomId, userId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_TRANSFER, res));
+    }
+
+    @Operation(
+            summary = "내가 받은 송금 리스트 조회 + 내가 받지 않은 송금 리스트 조회 API",
+            description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
+    )
+    @GetMapping("/{roomId}/transfers/receive/{userId}") // userId 지우기
+    public ResponseEntity<ResponseDTO<?>> getReceiverTransferStatus(
+            @PathVariable("roomId") Long roomId,
+            @PathVariable("userId") Long userId
+    ) {
+        ReceiveDTO.Receiver res = transferService.getReceiverTransferStatus(roomId, userId);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())

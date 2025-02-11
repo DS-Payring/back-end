@@ -116,4 +116,20 @@ public class TransferConverter {
                 .build();
     }
 
+    public static ReceiveDTO.Receive toReceive (TransferEntity transfer) {
+        return ReceiveDTO.Receive.builder()
+                .transferId(transfer.getId())
+                .transferImage(transfer.getTransferImage()) // 송금 확인 이미지
+                .receiverName(transfer.getReceiver().getUserName()) // 수취인 이름
+                .receiverImage(transfer.getReceiver().getProfileImage()) // 수취인 프로필 이미지
+                .build();
+    }
+
+    public static ReceiveDTO.Receiver toReceiver(List<UserTransferStatusDTO.NotReceived> notReceivedList, List<ReceiveDTO.Receive> receivedList) {
+        return ReceiveDTO.Receiver.builder()
+                .notReceived(notReceivedList)
+                .receives(receivedList)
+                .build();
+    }
+
 }

@@ -8,5 +8,8 @@ import java.util.List;
 
 public interface PaymentRepository extends JpaRepository<PaymentEntity, Long> {
     List<PaymentEntity> findAllByRoomOrderByIdDesc(RoomEntity room);
+
+    List<PaymentEntity> findAllByRoom(RoomEntity room);
+
     ;
 }

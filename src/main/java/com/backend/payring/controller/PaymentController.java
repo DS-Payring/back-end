@@ -4,7 +4,9 @@ import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
 import com.backend.payring.dto.response.ResponseDTO;
-import com.backend.payring.dto.temp.TempCreateDTO;
+import com.backend.payring.dto.transfer.CompletedUserDTO;
+import com.backend.payring.dto.transfer.UnCompletedUserDTO;
+import com.backend.payring.dto.transfer.UserTransferStatusDTO;
 import com.backend.payring.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
@@ -13,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -76,5 +80,63 @@ public class PaymentController {
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_DELETE_PAYMENT.getStatus().value())
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_DELETE_PAYMENT, null));
+    }
+
+    @Operation(
+            summary = "방 정산 요청하기 API",
+            description = "방 정산을 요청합니다. 백엔드 내부에서 유저별로 송금해야 하는 금액을 계산하여 관리를 시작합니다."
+    )
+    @GetMapping("/{roomId}/payments/start")
+    public ResponseEntity<ResponseDTO<?>> startSettling(@PathVariable("roomId") Long roomId) {
+
+        paymentService.startSettling(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_DIVIDE_PAYMENT.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_DIVIDE_PAYMENT, null));
+    }
+
+
+    @Operation(
+            summary = "정산 완료한 팀원 리스트 조회 API",
+            description = "방 내에서 송금할 내역이 없거나, 송금을 완료한 유저를 조회합니다."
+    )
+    @GetMapping("/{roomId}/payments/finish")
+    public ResponseEntity<ResponseDTO<?>> getFinishedTeamMemberList(@PathVariable("roomId") Long roomId) {
+
+        List<CompletedUserDTO.UserInfo> res = paymentService.getFinishTeamMemberList(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
+    }
+
+    @Operation(
+            summary = "아직 정산 중인 팀원 리스트 조회 API",
+            description = "송금 상태가 완료되지 않은 유저를 조회합니다."
+    )
+    @GetMapping("/{roomId}/payments/in-progress")
+    public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(@PathVariable("roomId") Long roomId) {
+
+        List<UnCompletedUserDTO.SenderInfo> res = paymentService.getUnFinishedTeamMemberList(roomId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
+    }
+
+    // getUserTransferStatus
+    @Operation(
+            summary = "현재 유저의 남은 정산 현황 조회 API",
+            description = "보내야 하는 내역, 나한테 보내지 않은 사람(방 정산 페이지)을 조회합니다."
+    )
+    @GetMapping("/{roomId}/payments/status/{userId}") // userId 지워야 함
+    public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(@PathVariable("roomId") Long roomId, @PathVariable("userId") Long userId) {
+
+        UserTransferStatusDTO.UserStatus res = paymentService.getUserTransferStatus(roomId, userId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_TRANSFER, res));
     }
 }

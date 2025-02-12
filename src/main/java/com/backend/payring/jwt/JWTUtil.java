@@ -46,7 +46,7 @@ public class JWTUtil {
             return true;
         } catch (JwtException e) {
             log.info(e.getMessage());
-            return true;
+            return false; // 다른 곳에서 예외 처리
         }
     }
 

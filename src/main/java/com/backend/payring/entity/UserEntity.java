@@ -23,7 +23,7 @@ public class UserEntity extends BaseEntity {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(nullable = false)
+    @Column
     private String password;
 
     @Column(name = "profile_image")
@@ -43,4 +43,34 @@ public class UserEntity extends BaseEntity {
 
     private String emailVerificationNum;
     private boolean emailVerified;
+
+    public static UserEntity createForEmailVerification(String email, String verificationNum) {
+        return UserEntity.builder()
+                .email(email)
+                .emailVerificationNum(verificationNum)
+                .emailVerified(false)
+                .userName("") // 임시값
+                .build();
+    }
+
+    public void updateEmailVerification(String verificationNum) {
+        this.emailVerificationNum = verificationNum;
+        this.emailVerified = false;
+    }
+
+    public void verifyEmail() {
+        this.emailVerified = true;
+    }
+
+    public void updateUserInfo(String userName, String password, String profileImage, String payUrl) {
+        this.userName = userName;
+        this.password = password;
+        this.profileImage = profileImage;
+        this.payUrl = payUrl;
+    }
+
+    public void addAccount(AccountEntity account) {
+        this.accounts.add(account);
+        account.setUser(this);
+    }
 }

@@ -38,9 +38,9 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<UserDTO.Res> signUp(@RequestBody @Valid UserDTO.SignUpReq req) {
-        if (userServiceImpl.existsByEmail(req.getEmail())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new UserDTO.Res("이미 가입된 메일입니다."));
-        }
+//        if (userServiceImpl.existsByEmail(req.getEmail())) {
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(new UserDTO.Res("이미 가입된 메일입니다."));
+//        }
         UserDTO.Res res = userServiceImpl.signup(req);
         return ResponseEntity.ok(res);
     }
@@ -54,7 +54,7 @@ public class UserController {
     @GetMapping("/profile")
     public String getUserProfile(@RequestHeader("Authorization") String token) {
         String jwtToken = token.replace("Bearer ", "");
-        String userId = jwtServiceImpl.getUserIdFromToken(jwtToken);
+        Long userId = jwtServiceImpl.getUserIdFromToken(jwtToken);
         return "유저: " + userId;
     }
 }

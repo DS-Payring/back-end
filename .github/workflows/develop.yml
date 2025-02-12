@@ -57,5 +57,5 @@ jobs:
             sudo docker rm -f $(docker ps -qa)
             sudo docker stop $(docker ps -a -q)
             sudo docker pull ${{ secrets.DOCKER_REPO }}/payring
-            sudo docker-compose up --build -d
+            sudo docker run -d --name payring -p 8080:8080 ${{ secrets.DOCKER_REPO }}/payring:latest
             sudo docker image prune -f

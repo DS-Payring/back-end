@@ -86,7 +86,7 @@ public class PaymentController {
             summary = "방 정산 요청하기 API",
             description = "방 정산을 요청합니다. 백엔드 내부에서 유저별로 송금해야 하는 금액을 계산하여 관리를 시작합니다."
     )
-    @GetMapping("/{roomId}/payments/start")
+    @PostMapping("/{roomId}/payments/start")
     public ResponseEntity<ResponseDTO<?>> startSettling(@PathVariable("roomId") Long roomId) {
 
         paymentService.startSettling(roomId);

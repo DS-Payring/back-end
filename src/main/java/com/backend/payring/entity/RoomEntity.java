@@ -44,6 +44,10 @@ public class RoomEntity extends BaseEntity{
     @Column(name = "settle_amount")
     private Integer settleAmount;
 
+    // 총 정산해야 하는 금액 (수정되지 않음)
+    @Column(name = "total_amount")
+    private Integer totalAmount;
+
     @OneToMany(mappedBy = "room",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TransferEntity> transfers = new ArrayList<>();
 
@@ -64,6 +68,12 @@ public class RoomEntity extends BaseEntity{
     // 총 정산할 금액 업데이트
     public void updateSettleAmount(Integer settleAmount) {
         this.settleAmount = settleAmount;
+        this.totalAmount = settleAmount;
         this.roomStatus = RoomStatus.SETTLING;
+    }
+
+    // 현재 상태 변경
+    public void finishSettlement() {
+        this.roomStatus = RoomStatus.SETTLED;
     }
 }

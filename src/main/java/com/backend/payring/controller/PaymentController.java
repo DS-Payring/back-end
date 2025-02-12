@@ -125,7 +125,6 @@ public class PaymentController {
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_USER, res));
     }
 
-    // getUserTransferStatus
     @Operation(
             summary = "현재 유저의 남은 정산 현황 조회 API",
             description = "보내야 하는 내역, 나한테 보내지 않은 사람(방 정산 페이지)을 조회합니다."

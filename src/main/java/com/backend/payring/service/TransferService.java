@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface TransferService {
     ReceiverDTO.TransferInfo getReceiverInfo(Long transferId);
 
-    VerifyTransferDTO.Res verifyTransfer(Long paymentId, MultipartFile image);
+    VerifyTransferDTO.Res verifyTransfer(Long paymentId, Long userId, MultipartFile image);
 
     SendDTO.Sender getSenderTransferStatus(Long roomId, Long userId);
 

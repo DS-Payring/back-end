@@ -38,12 +38,14 @@ public class TransferController {
             summary = "송금 인증 API (인증 기능 미구현)",
             description = "이미지를 업로드하여 송금을 인증합니다. 수취인, 금액이 일치하지 않으면 송금이 인증되지 않습니다."
     )
-    @PostMapping(value = "/transfers/{transferId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    // userId 빼기
+    @PostMapping(value = "/transfers/{transferId}/verify/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<?>> verifyTransfer(
             @PathVariable("transferId") Long transferId,
-            @RequestPart(value = "image") MultipartFile image
+            @RequestPart(value = "image") MultipartFile image,
+            @PathVariable("userId") Long userId
     ) {
-        VerifyTransferDTO.Res res = transferService.verifyTransfer(transferId, image);
+        VerifyTransferDTO.Res res = transferService.verifyTransfer(transferId, userId, image);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_VERIFY_TRANSFER.getStatus().value())

@@ -30,6 +30,7 @@ public enum ErrorCode {
     /**
      * 403
      */
+    NOT_SENDER(HttpStatus.UNAUTHORIZED, "송금 대상자가 아닙니다."),
 
 
     /**

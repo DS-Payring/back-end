@@ -60,8 +60,12 @@ public class PaymentServiceImpl implements PaymentService {
         UserEntity user = userRepository.findById(req.getUserId())
                 .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
-        RoomEntity room = roomRepository.findById(req.getProjectId())
+        RoomEntity room = roomRepository.findById(req.getRoomId())
                 .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
+
+        if (!room.getRoomStatus().equals(RoomStatus.COLLECTING)) {
+            throw new RoomException(ErrorCode.NOT_COLLECTING);
+        }
 
         PaymentEntity payment = PaymentConverter.toPaymentEntity(req, user, room, url);
 

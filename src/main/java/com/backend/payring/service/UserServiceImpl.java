@@ -26,7 +26,9 @@ public class UserServiceImpl {
 
     @Transactional
     public void sendVerificationCode(String email) throws MessagingException {
-        if (userRepository.existsByEmail(email)) {
+        UserEntity existUser = userRepository.findByEmail(email).orElseThrow(null);
+
+        if(existUser != null && existUser.isEmailVerified()) {
             throw new UserException(ErrorCode.DUPLICATE_EMAIL);
         }
 
@@ -62,6 +64,10 @@ public class UserServiceImpl {
 
         if (!user.isEmailVerified()) {
             throw new UserException(ErrorCode.EMAIL_NOT_VERIFIED);
+        }
+
+        if(user.getUserName() != null && !user.getUserName().isEmpty()) {
+            throw new UserException(ErrorCode.DUPLICATE_EMAIL);
         }
 
         user.updateUserInfo(

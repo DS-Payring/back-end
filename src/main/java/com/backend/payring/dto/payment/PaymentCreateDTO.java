@@ -9,8 +9,8 @@ public class PaymentCreateDTO {
     @Getter
     public static class Req {
         // projectId
-        @NotNull(message = "projectId는 필수 입력 값입니다.")
-        private Long projectId;
+        @NotNull(message = "roomId는 필수 입력 값입니다.")
+        private Long roomId;
         // 금액
         @NotNull(message = "amount는 필수 입력 값입니다.")
         private Integer amount;
@@ -19,6 +19,8 @@ public class PaymentCreateDTO {
         private String title;
         // 메모
         private String memo;
+        // 로그인 구현되면 빼기
+        private Long userId;
     }
 
     @Getter

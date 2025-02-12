@@ -48,6 +48,9 @@ dependencies {
 	// s3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
+	// ocr
+	implementation 'com.google.cloud:google-cloud-vision:3.17.0'
+	implementation 'com.google.protobuf:protobuf-java:3.21.12'
 }
 
 tasks.named('test') {

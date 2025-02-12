@@ -2,7 +2,6 @@ package com.backend.payring.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.security.core.userdetails.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +35,10 @@ public class PaymentEntity extends BaseEntity{
     @JoinColumn(nullable = false, name = "room_id")
     private RoomEntity room;
 
+    // 돈을 지불한 사람 (정산을 받아야 하는 사람)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
     private UserEntity user;
-
-    @OneToMany(mappedBy = "payment",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransferEntity> transfers = new ArrayList<>();
 
     public void updatePaymentImage (String url) {
         this.paymentImage = url;

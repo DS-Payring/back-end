@@ -16,11 +16,23 @@ public enum ResponseCode {
     SUCCESS_UPDATE_APPLICANT(HttpStatus.OK, "유저 정보를 성공적으로 수정했습니다."),
 
     /**
+     * room
+     */
+    SUCCESS_RETRIEVE_ROOM_STATISTICS(HttpStatus.OK, "기간별 방 정보를 성공적으로 조회했습니다."),
+
+    /**
      * payment
      */
     SUCCESS_CREATE_PAYMENT(HttpStatus.CREATED, "payment를 성공적으로 생성했습니다."),
     SUCCESS_RETRIEVE_PAYMENT(HttpStatus.OK, "payment를 성공적으로 조회했습니다."),
     SUCCESS_DELETE_PAYMENT(HttpStatus.OK, "payment를 성공적으로 삭제했습니다."),
+    SUCCESS_DIVIDE_PAYMENT(HttpStatus.OK, "payment을 성공적으로 분배했습니다."),
+
+    /**
+     * transfer
+     */
+    SUCCESS_VERIFY_TRANSFER(HttpStatus.OK, "송금을 성공적으로 인증했습니다."),
+    SUCCESS_RETRIEVE_TRANSFER(HttpStatus.OK, "송금 내역을 성공적으로 조회했습니다."),
     /**
      * Temp
      */

@@ -41,9 +41,6 @@ public class UserEntity extends BaseEntity {
     @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentEntity> payments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<TransferEntity> transfers = new ArrayList<>();
-
     private String emailVerificationNum;
     private boolean emailVerified;
 

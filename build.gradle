@@ -51,6 +51,12 @@ dependencies {
 	// ocr
 	implementation 'com.google.cloud:google-cloud-vision:3.17.0'
 	implementation 'com.google.protobuf:protobuf-java:3.21.12'
+
+	// mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	// thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 }
 
 tasks.named('test') {

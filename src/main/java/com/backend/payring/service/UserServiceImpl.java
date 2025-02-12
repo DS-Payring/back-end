@@ -7,6 +7,7 @@ import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.UserEntity;
 import com.backend.payring.repository.UserRepository;
 import com.backend.payring.exception.UserException;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,12 +25,12 @@ public class UserServiceImpl {
     private final JWTServiceImpl jwtServiceImpl;
 
     @Transactional
-    public void sendVerificationCode(String email) {
+    public void sendVerificationCode(String email) throws MessagingException {
         if (userRepository.existsByEmail(email)) {
             throw new UserException(ErrorCode.DUPLICATE_EMAIL);
         }
 
-        String verificationCode = emailServiceImpl.generateVerificationCode(email);
+        String verificationCode = emailServiceImpl.generateVerificationCode();
         emailServiceImpl.sendVerificationCode(email, verificationCode);
 
         // 이메일 인증용 사용자 엔티티

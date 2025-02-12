@@ -6,6 +6,7 @@ import com.backend.payring.entity.UserEntity;
 import com.backend.payring.exception.UserException;
 import com.backend.payring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -14,14 +15,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.security.Key;
 import java.util.Date;
 
 @Service
 @RequiredArgsConstructor
-public class JWTServiceImpl {
+public class JWTServiceImpl implements JWTService{
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -81,17 +81,32 @@ public class JWTServiceImpl {
         return false;
     }
 
-    public Long getUserIdFromToken(String token) {
+    public String getUserIdFromToken(String token) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody();
 
-            return Long.parseLong(claims.getSubject());
+            return claims.getSubject();
         } catch (Exception e) {
-            return null;
+            throw new UserException(ErrorCode.INVALID_ACCESS_TOKEN);
         }
     }
+
+    public Boolean isExpired(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)  // setSigningKey() 사용
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .getExpiration()
+                    .before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
+    }
+
 
 }

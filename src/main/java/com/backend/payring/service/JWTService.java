@@ -10,4 +10,6 @@ public interface JWTService {
     boolean isTokenValid(String token);
 
     String getUserIdFromToken(String token);
+
+    Boolean isExpired(String token);
 }

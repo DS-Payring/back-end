@@ -41,11 +41,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(GlobalException.class)
     public ResponseEntity<Object> handleGeneralException(GlobalException e, HttpServletRequest request) {
         ErrorResponseDTO errorReason = e.getErrorReasonHttpStatus();
-        System.out.println(errorReason);
-        return createErrorResponse(errorReason, request);
+        return createErrorResponse(errorReason);
     }
 
-    private ResponseEntity<Object> createErrorResponse(ErrorResponseDTO errorReason, HttpServletRequest request) {
+    private ResponseEntity<Object> createErrorResponse(ErrorResponseDTO errorReason) {
         return ResponseEntity
                 .status(errorReason.getStatus())
                 .body(errorReason);

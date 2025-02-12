@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",    // Swagger UI
                                 "/swagger-ui.html",   // Swagger UI HTML 페이지
                                 "/api/temp",
-                                "/api/auth/**"
+                                "/api/auth/**",
+                                "/api/health-check"
                         ).permitAll()// 인증 없이 접근 가능하도록 설정
 
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -61,21 +62,21 @@ public class SecurityConfig {
     }
 
     @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+       return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*"));  // 모든 origin 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));  // 허용할 HTTP 메서드
-        configuration.setAllowedHeaders(Arrays.asList("*"));  // 모든 헤더 허용
-        configuration.setMaxAge(3600L);  // preflight 캐시 시간
+        configuration.setAllowedOrigins(Arrays.asList("/**"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-       return new BCryptPasswordEncoder();
     }
 
 }

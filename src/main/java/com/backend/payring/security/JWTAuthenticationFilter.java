@@ -3,6 +3,7 @@ package com.backend.payring.security;
 import com.backend.payring.code.ErrorCode;
 import com.backend.payring.exception.UserException;
 import com.backend.payring.service.JWTServiceImpl;
+import com.backend.payring.util.TokenErrorResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -27,7 +28,20 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        String token = extractToken(request);
+        //request에서 Authorization 헤더를 찾음
+        String authorization= request.getHeader("Authorization");
+
+        //Authorization 헤더 검증
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String token = authorization.split(" ")[1];
+
+        try {
+
+        } c
 
         if (token != null && jwtServiceImpl.isTokenValid(token)) {
             Long userId = jwtServiceImpl.getUserIdFromToken(token);
@@ -37,7 +51,8 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication); // 인증 정보 설정
             }
         } else {
-            System.out.println("Invalid token or no token found");
+            System.out.println("token이 없음");
+            // TokenErrorResponse.sendErrorResponse(response, ErrorCode.TOKEN_MISSING);
         }
 
         chain.doFilter(request, response);

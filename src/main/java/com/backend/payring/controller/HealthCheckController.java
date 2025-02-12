@@ -1,5 +1,9 @@
 package com.backend.payring.controller;
 
+import com.backend.payring.code.ResponseCode;
+import com.backend.payring.dto.response.ResponseDTO;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -9,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthCheckController {
 
     @GetMapping
-    public String heathCheck() {
-        return "healthy";
+    public ResponseEntity<String> heathCheck() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body("healthy");
     }
 }

@@ -5,6 +5,7 @@ import com.backend.payring.converter.UserConverter;
 import com.backend.payring.dto.user.UserDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.UserEntity;
+import com.backend.payring.jwt.JWTUtil;
 import com.backend.payring.repository.UserRepository;
 import com.backend.payring.exception.UserException;
 import jakarta.mail.MessagingException;
@@ -22,7 +23,7 @@ public class UserServiceImpl {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final EmailServiceImpl emailServiceImpl;
-    private final JWTServiceImpl jwtServiceImpl;
+    private final JWTUtil jwtUtil;
 
     @Transactional
     public void sendVerificationCode(String email) throws MessagingException {
@@ -78,7 +79,7 @@ public class UserServiceImpl {
             });
         }
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtUtil.createJwt(user.getId().toString());
         return UserConverter.toRes(user, user.getAccounts(), token);
     }
 
@@ -91,7 +92,7 @@ public class UserServiceImpl {
             throw new UserException(ErrorCode.INVALID_PASSWORD);
         }
 
-        String token = jwtServiceImpl.generateToken(user);
+        String token = jwtUtil.createJwt(user.getId().toString());
         return UserConverter.toRes(user, user.getAccounts(), token);
     }
 }

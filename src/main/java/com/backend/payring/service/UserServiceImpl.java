@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -27,10 +29,14 @@ public class UserServiceImpl {
 
     @Transactional
     public void sendVerificationCode(String email) throws MessagingException {
-        UserEntity existUser = userRepository.findByEmail(email).orElseThrow(null);
+        Optional<UserEntity> optionalUser = userRepository.findByEmail(email);
 
-        if(existUser != null && existUser.isEmailVerified()) {
-            throw new UserException(ErrorCode.DUPLICATE_EMAIL);
+        if (optionalUser.isPresent()) {
+            UserEntity existUser = optionalUser.get();
+
+            if (existUser.isEmailVerified()) {
+                throw new UserException(ErrorCode.DUPLICATE_EMAIL);
+            }
         }
 
         String verificationCode = emailServiceImpl.generateVerificationCode();

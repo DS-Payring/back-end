@@ -52,6 +52,18 @@ public enum ErrorCode {
 
     UNABLE_TO_RESOLVE_HOST(HttpStatus.BAD_GATEWAY, "호스트를 찾을 수 없습니다."),
 
+
+    /**
+     * 회원 가입 관련
+     */
+    DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
+
+    INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증 코드입니다."),
+
+    EMAIL_NOT_VERIFIED(HttpStatus.UNAUTHORIZED, "이메일 인증이 완료되지 않았습니다."),
+
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호입니다.")
+
     ;
 
     private final HttpStatus status;
@@ -66,4 +78,6 @@ public enum ErrorCode {
                 .build()
                 ;
     }
+
+
 }

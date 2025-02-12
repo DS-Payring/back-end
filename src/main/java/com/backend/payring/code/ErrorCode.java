@@ -19,13 +19,17 @@ public enum ErrorCode {
     ALREADY_COMPLETED_TRANSFER(HttpStatus.BAD_REQUEST, "이미 승인된 송금 요청입니다."),
 
     /**
-     * 401 UNAUTHORIZED: 토큰 만료
+     * 401
      */
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다."),
     INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Access 토큰입니다."),
     INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 Refresh 토큰입니다."),
     TOKEN_MISSING(HttpStatus.UNAUTHORIZED, "요청 헤더에 토큰이 없습니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "로그인에 실패했습니다."),
+    TRANSFER_VERIFICATION_FAILED(HttpStatus.UNAUTHORIZED, "정보가 일치하지 않아 송금 인증에 실패했습니다."),
+    RECEIVER_NOT_MATCH(HttpStatus.UNAUTHORIZED, "수취인의 정보가 일치하지 않아 송금 인증에 실패했습니다."),
+    AMOUNT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "송금 금액이 인식되지 않아 송금 인증에 실패했습니다."),
+    AMOUNT_NOT_MATCH(HttpStatus.UNAUTHORIZED, "송금 금액이 일치하지 않아 송금 인증에 실패했습니다."),
 
     /**
      * 403
@@ -38,13 +42,17 @@ public enum ErrorCode {
      */
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "유저를 찾을 수 없습니다."),
     ROOM_NOT_FOUND(HttpStatus.NOT_FOUND, "방을 찾을 수 없습니다."),
-    PAYMENT_NOT_FOUND(HttpStatus.OK, "정산 요청을 찾을 수 없습니다."),
-    TRANSFER_NOT_FOUND(HttpStatus.OK, "정산 내역을 찾을 수 없습니다."),
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "정산 요청을 찾을 수 없습니다."),
+    TRANSFER_NOT_FOUND(HttpStatus.NOT_FOUND, "정산 내역을 찾을 수 없습니다."),
 
     /**
      * 406
      * **/
 
+    /**
+     * 500
+     */
+    VISION_API_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Google Cloud Vision API 호출 실패"),
 
     /**
      * 502

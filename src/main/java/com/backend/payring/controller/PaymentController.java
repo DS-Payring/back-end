@@ -57,7 +57,7 @@ public class PaymentController {
     }
 
     @Operation(
-            summary = "방별 정산 금액 요청 조회 API (정산 신청 전)",
+            summary = "방별 정산 금액 요청 조회 API",
             description = "방별 정산 금액 요청을 모두 조회합니다."
     )
     @GetMapping("/payments/{paymentId}")

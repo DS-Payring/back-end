@@ -38,3 +38,6 @@ out/
 
 ### properties, yml ###
 /src/main/resources/application.yml
+
+### google cloud  vision ###
+/src/main/resources/google-vision-key.json

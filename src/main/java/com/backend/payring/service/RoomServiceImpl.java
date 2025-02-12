@@ -14,8 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,6 @@ public class RoomServiceImpl implements RoomService{
         int totalSettledAmount = 0; // 총 정산 금액
         int unSettledAmount = 0; // 아직 정산하지 않은 금액
 
-        // ✅ 방 정보 리스트
         List<DurationStatusDTO.RoomInfo> roomInfoList = new ArrayList<>();
 
         for (RoomEntity room : rooms) {

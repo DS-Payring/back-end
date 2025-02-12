@@ -15,6 +15,7 @@ import com.backend.payring.exception.PaymentException;
 import com.backend.payring.exception.RoomException;
 import com.backend.payring.exception.UserException;
 import com.backend.payring.repository.*;
+import com.backend.payring.service.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

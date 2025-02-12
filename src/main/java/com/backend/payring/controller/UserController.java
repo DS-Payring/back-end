@@ -4,6 +4,7 @@ import com.backend.payring.dto.user.UserDTO;
 import com.backend.payring.repository.UserRepository;
 import com.backend.payring.service.JWTServiceImpl;
 import com.backend.payring.service.UserServiceImpl;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class UserController {
     private final JWTServiceImpl jwtServiceImpl;
 
     @PostMapping("/email/verify/send")
-    public ResponseEntity<Void> sendVerificationCode(@RequestParam String email) {
+    public ResponseEntity<Void> sendVerificationCode(@RequestParam String email) throws MessagingException {
         userServiceImpl.sendVerificationCode(email);
         return ResponseEntity.ok().build();
     }

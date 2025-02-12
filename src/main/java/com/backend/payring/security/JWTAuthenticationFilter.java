@@ -1,5 +1,7 @@
 package com.backend.payring.security;
 
+import com.backend.payring.code.ErrorCode;
+import com.backend.payring.exception.UserException;
 import com.backend.payring.service.JWTServiceImpl;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,7 +30,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         String token = extractToken(request);
 
         if (token != null && jwtServiceImpl.isTokenValid(token)) {
-            String userId = jwtServiceImpl.getUserIdFromToken(token);
+            Long userId = jwtServiceImpl.getUserIdFromToken(token);
             if (userId != null) {
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(userId, null, null);

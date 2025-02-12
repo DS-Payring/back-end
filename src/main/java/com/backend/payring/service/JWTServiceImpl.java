@@ -1,19 +1,26 @@
 package com.backend.payring.service;
 
+import com.backend.payring.code.ErrorCode;
 import com.backend.payring.entity.UserEntity;
 
+import com.backend.payring.exception.UserException;
+import com.backend.payring.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cglib.core.internal.Function;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.security.Key;
 import java.util.Date;
 
 @Service
+@RequiredArgsConstructor
 public class JWTServiceImpl {
 
     @Value("${jwt.secret}")
@@ -21,6 +28,8 @@ public class JWTServiceImpl {
 
     @Value("${jwt.expiration}")
     private String expiration;
+
+    private final UserRepository userRepository;
 
     private Key getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
@@ -32,7 +41,7 @@ public class JWTServiceImpl {
         Date accessTokenExpiresIn = new Date(now + Long.parseLong(expiration));
 
         return Jwts.builder()
-                .setSubject(user.getEmail())
+                .setSubject(user.getId().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(accessTokenExpiresIn)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
@@ -72,14 +81,14 @@ public class JWTServiceImpl {
         return false;
     }
 
-    public String getUserIdFromToken(String token) {
+    public Long getUserIdFromToken(String token) {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
                     .getBody();
 
-            return claims.getSubject();
+            return Long.parseLong(claims.getSubject());
         } catch (Exception e) {
             return null;
         }

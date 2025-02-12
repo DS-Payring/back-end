@@ -12,8 +12,11 @@ public enum ResponseCode {
      */
     SUCCESS_RETRIEVE_USER(HttpStatus.OK, "유저 조회를 성공했습니다."),
     SUCCESS_LOGIN(HttpStatus.OK, "로그인을 성공했습니다."),
+    SUCCESS_SIGNUP(HttpStatus.OK, "회원가입을 성공했습니다."),
     SUCCESS_RETRIEVE_USERINFO(HttpStatus.OK,"유저 정보를 성공적으로 가져왔습니다."),
     SUCCESS_UPDATE_APPLICANT(HttpStatus.OK, "유저 정보를 성공적으로 수정했습니다."),
+    SUCCESS_SEND_EMAIL(HttpStatus.OK, "이메일을 성공적으로 전송했습니다."),
+    SUCCESS_VERIFY_EMAIL(HttpStatus.OK, "이메일을 성공적으로 인증했습니다."),
 
     /**
      * room

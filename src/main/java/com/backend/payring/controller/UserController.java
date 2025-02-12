@@ -1,9 +1,11 @@
 package com.backend.payring.controller;
 
+import com.backend.payring.code.ErrorCode;
 import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.user.UserDTO;
 import com.backend.payring.entity.UserEntity;
+import com.backend.payring.exception.UserException;
 import com.backend.payring.repository.UserRepository;
 import com.backend.payring.service.UserServiceImpl;
 import jakarta.mail.MessagingException;
@@ -65,7 +67,9 @@ public class UserController {
 
     @GetMapping("/profile")
     public String getUserProfile(@AuthenticationPrincipal UserEntity user) {
-
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
         return "유저: " + user.getId();
     }
 }

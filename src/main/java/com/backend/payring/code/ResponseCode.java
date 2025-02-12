@@ -16,6 +16,11 @@ public enum ResponseCode {
     SUCCESS_UPDATE_APPLICANT(HttpStatus.OK, "유저 정보를 성공적으로 수정했습니다."),
 
     /**
+     * room
+     */
+    SUCCESS_RETRIEVE_ROOM_STATISTICS(HttpStatus.OK, "기간별 방 정보를 성공적으로 조회했습니다."),
+
+    /**
      * payment
      */
     SUCCESS_CREATE_PAYMENT(HttpStatus.CREATED, "payment를 성공적으로 생성했습니다."),

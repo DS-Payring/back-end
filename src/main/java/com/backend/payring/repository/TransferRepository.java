@@ -25,4 +25,11 @@ public interface TransferRepository extends JpaRepository<TransferEntity, Long> 
     List<TransferEntity> findByRoomIdAndSenderIdAndIsCompleteTrue(Long roomId, Long senderId);
 
     List<TransferEntity> findByRoomIdAndReceiverIdAndIsCompleteTrue(Long roomId, Long userId);
-}
+
+    // 완료된 송금 금액 합산 (`isComplete=true`)
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM TransferEntity t WHERE t.room.id = :roomId AND t.isComplete = true")
+    int sumCompletedTransfersByRoomId(@Param("roomId") Long roomId);
+
+    // 미완료된 송금 금액 합산 (`isComplete=false`)
+    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM TransferEntity t WHERE t.room.id = :roomId AND t.isComplete = false")
+    int sumUncompletedTransfersByRoomId(@Param("roomId") Long roomId);}

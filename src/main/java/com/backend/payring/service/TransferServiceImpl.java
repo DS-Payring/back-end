@@ -42,7 +42,7 @@ public class TransferServiceImpl implements TransferService{
 
     @Override
     @Transactional
-    public VerifyTransferDTO.Res verifyTransfer(Long transferId, MultipartFile image) {
+    public VerifyTransferDTO.Res verifyTransfer(Long transferId, Long userId, MultipartFile image) {
         // 이미지가 없으면 예외 처리
         if (image == null) {
             throw new TransferException(ErrorCode.IMAGE_REQUIRED);
@@ -51,6 +51,12 @@ public class TransferServiceImpl implements TransferService{
         TransferEntity transfer = transferRepository.findById(transferId)
                 .orElseThrow(() -> new TransferException(ErrorCode.TRANSFER_NOT_FOUND));
 
+        // sender와 일치하지 않으면 예외 처리
+        if (!transfer.getSender().getId().equals(userId)) {
+            throw new TransferException(ErrorCode.NOT_SENDER);
+        }
+
+        // 이미 완료된 송금이라면 예외 처리
         if (transfer.getIsComplete()) {
             throw new TransferException(ErrorCode.ALREADY_COMPLETED_TRANSFER);
         }
@@ -68,6 +74,14 @@ public class TransferServiceImpl implements TransferService{
 
         transfer.verify(url);
         transferRepository.save(transfer);
+
+        // 방 정산 필요 금액에서 감소
+        RoomEntity room = transfer.getRoom();
+        room.subtractSettleAmount(transfer.getAmount());
+
+        if (room.getSettleAmount() == 0) {
+            room.finishSettlement();
+        }
 
         return TransferConverter.toVerifyRes(transfer);
     }

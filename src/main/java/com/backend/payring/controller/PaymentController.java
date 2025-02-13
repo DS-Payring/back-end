@@ -131,9 +131,12 @@ public class PaymentController {
             description = "송금 상태가 완료되지 않은 유저를 조회합니다."
     )
     @GetMapping("/{roomId}/payments/in-progress")
-    public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(@PathVariable("roomId") Long roomId) {
+    public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(
+            @AuthenticationPrincipal UserEntity user,
+            @PathVariable("roomId") Long roomId
+    ) {
 
-        List<UnCompletedUserDTO.SenderInfo> res = paymentService.getUnFinishedTeamMemberList(roomId);
+        List<UnCompletedUserDTO.SenderInfo> res = paymentService.getUnFinishedTeamMemberList(roomId, user.getId());
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_USER.getStatus().value())

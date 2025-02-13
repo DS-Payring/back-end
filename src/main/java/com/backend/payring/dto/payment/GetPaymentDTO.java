@@ -17,9 +17,9 @@ public class GetPaymentDTO {
         private String title;
         private String memo;
         private String paymentImage;
-        private Boolean isTransfer;
         private Long roomId;
         private Long userId;
+        private Boolean isWriter;
     }
 
     @Getter
@@ -27,6 +27,7 @@ public class GetPaymentDTO {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class PaymentList {
+        private Integer totalAmount;
         private List<PaymentDetail> payments;
     }
 }

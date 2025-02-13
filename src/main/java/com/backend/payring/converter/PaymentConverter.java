@@ -38,19 +38,39 @@ public class PaymentConverter {
                 .title(payment.getTitle())
                 .memo(payment.getMemo())
                 .paymentImage(payment.getPaymentImage())
-                .isTransfer(payment.getIsTransfer())
                 .roomId(payment.getRoom().getId()) // N + 1
                 .userId(payment.getUser().getId())
                 .build();
     }
 
-    public static GetPaymentDTO.PaymentList toPaymentList(List<PaymentEntity> payments) {
+    public static GetPaymentDTO.PaymentList toPaymentList(List<PaymentEntity> payments, Long currentUserId, Boolean isCollecting) {
         List<GetPaymentDTO.PaymentDetail> paymentDetails = payments.stream()
-                .map(PaymentConverter::toPaymentDetail)
+                .map(payment -> {
+                    boolean isWriter = isCollecting && payment.getUser().getId().equals(currentUserId); // isCollecting이 false면 무조건 false
+
+                    return GetPaymentDTO.PaymentDetail.builder()
+                            .id(payment.getId())
+                            .amount(payment.getAmount())
+                            .title(payment.getTitle())
+                            .memo(payment.getMemo())
+                            .paymentImage(payment.getPaymentImage())
+                            .roomId(payment.getRoom().getId())
+                            .userId(payment.getUser().getId())
+                            .isWriter(isWriter) // isCollecting이 false면 무조건 false
+                            .build();
+                })
                 .collect(Collectors.toList());
 
+        // totalAmount 계산
+        int totalAmount = payments.stream()
+                .mapToInt(PaymentEntity::getAmount)
+                .sum();
+
         return GetPaymentDTO.PaymentList.builder()
+                .totalAmount(totalAmount)
                 .payments(paymentDetails)
                 .build();
     }
+
+
 }

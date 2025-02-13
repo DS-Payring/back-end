@@ -30,5 +30,6 @@ public class UnCompletedUserDTO {
         private Long receiverId;
         private String receiverName;
         private Integer amount;
+        private Boolean isSenderForMe;
     }
 }

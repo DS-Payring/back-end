@@ -52,7 +52,8 @@ public enum ErrorCode {
     /**
      * 500
      */
-    VISION_API_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Google Cloud Vision API 호출 실패"),
+    VISION_API_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "Google Cloud Vision API 호출에 실패했습니다."),
+    EMAIL_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "이메일을 전송하는데 실패했습니다."),
 
     /**
      * 502

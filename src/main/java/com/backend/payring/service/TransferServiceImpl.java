@@ -10,6 +10,7 @@ import com.backend.payring.repository.PaymentRepository;
 import com.backend.payring.repository.TransferRepository;
 import com.backend.payring.service.ocr.GoogleCloudVisionService;
 import com.backend.payring.service.s3.S3Uploader;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class TransferServiceImpl implements TransferService{
     private final AccountRepository accountRepository;
     private final S3Uploader s3Uploader;
     private final GoogleCloudVisionService googleCloudVisionService;
+    private final EmailService emailService;
 
     @Override
     public ReceiverDTO.TransferInfo getReceiverInfo(Long transferId) {
@@ -193,6 +195,33 @@ public class TransferServiceImpl implements TransferService{
                 .collect(Collectors.toList());
 
         return TransferConverter.toReceiver(notReceivedList, receivedList);
+    }
+
+    @Override
+    public void sendRemind(Long transferId) {
+
+        TransferEntity transfer = transferRepository.findById(transferId)
+                .orElseThrow(() -> new TransferException(ErrorCode.TRANSFER_NOT_FOUND));
+
+        if(transfer.getIsComplete()){
+            throw new TransferException(ErrorCode.ALREADY_COMPLETED_TRANSFER);
+        }
+
+        RoomEntity room = transfer.getRoom();
+
+        String to = transfer.getSender().getEmail();
+        String name = transfer.getSender().getUserName();
+        String receiverName = transfer.getReceiver().getUserName();
+        String roomName = room.getRoomName();
+        Integer amount = transfer.getAmount();
+
+        try {
+            emailService.sendReminder(to, name, receiverName, roomName, amount);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            throw new TransferException(ErrorCode.EMAIL_FAILED);
+        }
+
     }
 
 

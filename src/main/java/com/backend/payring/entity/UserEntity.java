@@ -73,4 +73,9 @@ public class UserEntity extends BaseEntity {
         this.accounts.add(account);
         account.setUser(this);
     }
+
+    public void updateUserInfo(String userName, String payUrl) {
+        this.userName = userName;
+        this.payUrl = payUrl;
+    }
 }

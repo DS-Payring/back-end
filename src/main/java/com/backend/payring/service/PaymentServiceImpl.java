@@ -74,13 +74,17 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public GetPaymentDTO.PaymentList getPaymentList(Long roomId) {
+    public GetPaymentDTO.PaymentList getPaymentList(Long roomId, UserEntity user) {
         RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
 
+        Boolean isCollecting = true;
+        if(!room.getRoomStatus().equals(RoomStatus.COLLECTING)) {
+            isCollecting = false;
+        }
         List<PaymentEntity> payments = paymentRepository.findAllByRoomOrderByIdDesc(room);
 
-        return PaymentConverter.toPaymentList(payments);
+        return PaymentConverter.toPaymentList(payments, user.getId(), isCollecting);
     }
 
     @Override
@@ -97,6 +101,10 @@ public class PaymentServiceImpl implements PaymentService {
     public void deletePayment(Long paymentId) {
         PaymentEntity payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentException(ErrorCode.PAYMENT_NOT_FOUND));
+
+        if (!payment.getRoom().getRoomStatus().equals(RoomStatus.COLLECTING)) {
+            throw new RoomException(ErrorCode.NOT_COLLECTING);
+        }
 
         paymentRepository.delete(payment);
     }
@@ -227,7 +235,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UnCompletedUserDTO.SenderInfo> getUnFinishedTeamMemberList(Long roomId) {
+    public List<UnCompletedUserDTO.SenderInfo> getUnFinishedTeamMemberList(Long roomId, Long userId) {
         // 아직 정산하지 않은 송금 내역
         List<TransferEntity> unCompletedTransfers = transferRepository.findUnCompletedTransfers(roomId);
 
@@ -245,7 +253,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             // 송금해야 할 대상 추가
             UnCompletedUserDTO.SenderInfo senderInfo = senderInfoMap.get(senderId);
-            senderInfo.getReceiverInfos().add(TransferConverter.toReceiverInfo(receiverId, transfer, amount));
+            senderInfo.getReceiverInfos().add(TransferConverter.toReceiverInfo(receiverId, transfer, amount, userId));
 
             // 총 송금해야 하는 금액
             senderInfo.updateTotalLeftAmount(senderInfo.getTotalLeftAmount() + amount);
@@ -253,6 +261,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         return new ArrayList<>(senderInfoMap.values());
     }
+
 
     @Override
     @Transactional(readOnly = true)

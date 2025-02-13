@@ -22,7 +22,7 @@ public class SwaggerConfig {
         testServer.setUrl("http://localhost:8080/");
 
         Server deployServer = new Server();
-        deployServer.setUrl("https://carely-backend.site/");
+        deployServer.setUrl("https://storyteller-backend.site/");
 
 
         String jwt = "JWT";

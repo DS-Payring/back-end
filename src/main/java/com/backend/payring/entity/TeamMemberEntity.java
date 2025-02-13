@@ -15,6 +15,9 @@ public class TeamMemberEntity extends BaseEntity{
     @Column(name = "team_member_id")
     private Long id;
 
+    @Version
+    private Long version;
+
     @Column(nullable = false, name = "is_owner")
     private Boolean isOwner;
 
@@ -28,4 +31,12 @@ public class TeamMemberEntity extends BaseEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "room_id")
     private RoomEntity room;
+
+    public void acceptInvitation() {
+        this.isJoin = true;
+    }
+
+    public void rejectInvitation() {
+        this.isJoin = false;
+    }
 }

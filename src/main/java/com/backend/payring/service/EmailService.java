@@ -1,7 +1,8 @@
 package com.backend.payring.service;
 
-public interface EmailService {
-    String generateVerificationCode(String email);
+import jakarta.mail.MessagingException;
 
-    void sendVerificationCode(String email, String verificationCode);
+public interface EmailService {
+    void sendVerificationCode(String email, String verificationCode) throws MessagingException;
+    void sendReminder(String to, String name, String receiverName, String room, Integer amount) throws MessagingException;
 }

@@ -15,4 +15,6 @@ public interface TransferService {
     SendDTO.Sender getSenderTransferStatus(Long roomId, UserEntity user);
 
     ReceiveDTO.Receiver getReceiverTransferStatus(Long roomId, UserEntity user);
+
+    void sendRemind(Long transferId);
 }

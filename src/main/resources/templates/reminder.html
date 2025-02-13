@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>정산 안내</title>
+    <style>
+        /* 전체 스타일 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #D5EDD2; /* 부드러운 녹색 배경 */
+            margin: 0;
+            padding: 0;
+            color: #08313F;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* 메일 컨테이너 */
+        .container {
+            max-width: 600px;
+            padding: 30px;
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* 그림자 강조 */
+        }
+
+        /* 제목 */
+        h1 {
+            font-size: 28px;
+            text-align: center;
+            color: #08313F;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        /* 본문 스타일 */
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        /* 강조 스타일 */
+        .highlight {
+            font-weight: bold;
+            color: #08313F;
+        }
+
+        /* 푸터 스타일 */
+        .footer {
+            font-size: 14px;
+            color: #08313F;
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(8, 49, 63, 0.2); /* 연한 선 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>정산 안내</h1>
+    <p th:text="'안녕하세요, ' + ${name} + '님! '"></p>
+    <p th:text="${room} + ' 방의 ' + ${receiverName} + '님께 ' + ${amount} + '원을 정산해주세요!'"></p>
+
+    <div class="footer">
+        <p>감사합니다.</p>
+        <p>Payring Team</p>
+    </div>
+</div>
+</body>
+</html>

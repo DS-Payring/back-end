@@ -85,7 +85,7 @@ public class TransferController {
             summary = "내가 받은 송금 리스트 조회 + 내가 받지 않은 송금 리스트 조회 API | 은서",
             description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
     )
-    @GetMapping("/{roomId}/transfers/receive") // userId 지우기
+    @GetMapping("/{roomId}/transfers/receive")
     public ResponseEntity<ResponseDTO<?>> getReceiverTransferStatus(
             @PathVariable("roomId") Long roomId,
             @AuthenticationPrincipal UserEntity user
@@ -100,5 +100,19 @@ public class TransferController {
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())
                 .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_TRANSFER, res));
+    }
+
+    @Operation(
+            summary = "독촉하기 API | 은서",
+            description = "정산을 하라는 메일을 보냅니다."
+    )
+    @PostMapping("/transfers/{transferId}/send-remind")
+    public ResponseEntity<ResponseDTO<?>> sendRemind (@PathVariable("transferId") Long transferId) {
+
+        transferService.sendRemind(transferId);
+
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_SENDING_REMIND.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_SENDING_REMIND, null));
     }
 }

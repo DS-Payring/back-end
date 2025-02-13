@@ -36,6 +36,7 @@ public enum ResponseCode {
      */
     SUCCESS_VERIFY_TRANSFER(HttpStatus.OK, "송금을 성공적으로 인증했습니다."),
     SUCCESS_RETRIEVE_TRANSFER(HttpStatus.OK, "송금 내역을 성공적으로 조회했습니다."),
+    SUCCESS_SENDING_REMIND(HttpStatus.OK, "독촉 메일을 성공적으로 보냈습니다."),
     /**
      * Temp
      */

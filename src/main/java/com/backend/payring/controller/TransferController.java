@@ -1,16 +1,20 @@
 package com.backend.payring.controller;
 
+import com.backend.payring.code.ErrorCode;
 import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.transfer.ReceiveDTO;
 import com.backend.payring.dto.transfer.ReceiverDTO;
 import com.backend.payring.dto.transfer.SendDTO;
 import com.backend.payring.dto.transfer.VerifyTransferDTO;
+import com.backend.payring.entity.UserEntity;
+import com.backend.payring.exception.UserException;
 import com.backend.payring.service.TransferService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,17 +39,22 @@ public class TransferController {
     }
 
     @Operation(
-            summary = "송금 인증 API (인증 기능 미구현)",
-            description = "이미지를 업로드하여 송금을 인증합니다. 수취인, 금액이 일치하지 않으면 송금이 인증되지 않습니다."
+            summary = "송금 인증 API",
+            description = "이미지를 업로드하여 ocr 기술을 통해 송금을 인증합니다. 수취인, 금액이 일치하지 않으면 송금이 인증되지 않습니다."
     )
     // userId 빼기
-    @PostMapping(value = "/transfers/{transferId}/verify/{userId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/transfers/{transferId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<?>> verifyTransfer(
             @PathVariable("transferId") Long transferId,
             @RequestPart(value = "image") MultipartFile image,
-            @PathVariable("userId") Long userId
-    ) {
-        VerifyTransferDTO.Res res = transferService.verifyTransfer(transferId, userId, image);
+            @AuthenticationPrincipal UserEntity user
+            ) {
+
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        VerifyTransferDTO.Res res = transferService.verifyTransfer(transferId, user, image);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_VERIFY_TRANSFER.getStatus().value())
@@ -56,12 +65,16 @@ public class TransferController {
             summary = "내가 보낸 송금 리스트 조회 + 내가 보내지 않은 송금 리스트 조회 API",
             description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
     )
-    @GetMapping("/{roomId}/transfers/send/{userId}") // userId 지우기
+    @GetMapping("/{roomId}/transfers/send")
     public ResponseEntity<ResponseDTO<?>> getSenderTransferStatus(
             @PathVariable("roomId") Long roomId,
-            @PathVariable("userId") Long userId
+            @AuthenticationPrincipal UserEntity user
     ) {
-        SendDTO.Sender res = transferService.getSenderTransferStatus(roomId, userId);
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        SendDTO.Sender res = transferService.getSenderTransferStatus(roomId, user);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())
@@ -72,12 +85,17 @@ public class TransferController {
             summary = "내가 받은 송금 리스트 조회 + 내가 받지 않은 송금 리스트 조회 API",
             description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
     )
-    @GetMapping("/{roomId}/transfers/receive/{userId}") // userId 지우기
+    @GetMapping("/{roomId}/transfers/receive") // userId 지우기
     public ResponseEntity<ResponseDTO<?>> getReceiverTransferStatus(
             @PathVariable("roomId") Long roomId,
-            @PathVariable("userId") Long userId
+            @AuthenticationPrincipal UserEntity user
     ) {
-        ReceiveDTO.Receiver res = transferService.getReceiverTransferStatus(roomId, userId);
+
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        ReceiveDTO.Receiver res = transferService.getReceiverTransferStatus(roomId, user);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())

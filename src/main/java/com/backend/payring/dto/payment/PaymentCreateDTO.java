@@ -19,8 +19,6 @@ public class PaymentCreateDTO {
         private String title;
         // 메모
         private String memo;
-        // 로그인 구현되면 빼기
-        private Long userId;
     }
 
     @Getter

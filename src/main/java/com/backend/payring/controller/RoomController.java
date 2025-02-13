@@ -1,13 +1,17 @@
 package com.backend.payring.controller;
 
+import com.backend.payring.code.ErrorCode;
 import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.room.DurationStatusDTO;
 import com.backend.payring.dto.transfer.UserTransferStatusDTO;
+import com.backend.payring.entity.UserEntity;
+import com.backend.payring.exception.UserException;
 import com.backend.payring.service.RoomService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,11 +27,15 @@ public class RoomController {
     )
     @GetMapping("/status")
     public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(
-            @RequestParam(value = "userId") Long userId, // userId 지워야 함
+            @AuthenticationPrincipal UserEntity user,
             @RequestParam(value = "period", defaultValue = "7") Integer day
     ) {
 
-        DurationStatusDTO.DurationStatus res = roomService.getDurationStatus(day, userId);
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        DurationStatusDTO.DurationStatus res = roomService.getDurationStatus(day, user);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_ROOM_STATISTICS.getStatus().value())

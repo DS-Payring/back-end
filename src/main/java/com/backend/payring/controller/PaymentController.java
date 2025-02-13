@@ -1,5 +1,6 @@
 package com.backend.payring.controller;
 
+import com.backend.payring.code.ErrorCode;
 import com.backend.payring.code.ResponseCode;
 import com.backend.payring.dto.payment.GetPaymentDTO;
 import com.backend.payring.dto.payment.PaymentCreateDTO;
@@ -7,12 +8,15 @@ import com.backend.payring.dto.response.ResponseDTO;
 import com.backend.payring.dto.transfer.CompletedUserDTO;
 import com.backend.payring.dto.transfer.UnCompletedUserDTO;
 import com.backend.payring.dto.transfer.UserTransferStatusDTO;
+import com.backend.payring.entity.UserEntity;
+import com.backend.payring.exception.UserException;
 import com.backend.payring.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,10 +36,14 @@ public class PaymentController {
     @PostMapping(value = "/payments", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseDTO<?>> createPayment (
             @Valid @RequestPart("req") PaymentCreateDTO.Req req,
-            @RequestPart(value = "image", required = false) MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image,
+            @AuthenticationPrincipal UserEntity user
             ) {
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
 
-        PaymentCreateDTO.Res res = paymentService.createPayment(req, image);
+        PaymentCreateDTO.Res res = paymentService.createPayment(req, image, user);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_CREATE_PAYMENT.getStatus().value())
@@ -129,10 +137,17 @@ public class PaymentController {
             summary = "현재 유저의 남은 정산 현황 조회 API",
             description = "보내야 하는 내역, 나한테 보내지 않은 사람(방 정산 페이지)을 조회합니다."
     )
-    @GetMapping("/{roomId}/payments/status/{userId}") // userId 지워야 함
-    public ResponseEntity<ResponseDTO<?>> getUnFinishedTeamMemberList(@PathVariable("roomId") Long roomId, @PathVariable("userId") Long userId) {
+    @GetMapping("/{roomId}/payments/status")
+    public ResponseEntity<ResponseDTO<?>> getUserLeftSettlements(
+            @PathVariable("roomId") Long roomId,
+            @AuthenticationPrincipal UserEntity user
+    ) {
 
-        UserTransferStatusDTO.UserStatus res = paymentService.getUserTransferStatus(roomId, userId);
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        UserTransferStatusDTO.UserStatus res = paymentService.getUserTransferStatus(roomId, user);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_TRANSFER.getStatus().value())

@@ -21,7 +21,7 @@ public class RoomEntity extends BaseEntity{
     @Column(name = "room_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "room_name")
     private String roomName;
 
     // 정산 모으는 중 or 정산 중 or 정산 마감

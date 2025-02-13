@@ -49,7 +49,13 @@ public class PaymentConverter {
                 .map(PaymentConverter::toPaymentDetail)
                 .collect(Collectors.toList());
 
+        // totalAmount 계산
+        int totalAmount = payments.stream()
+                .mapToInt(PaymentEntity::getAmount) // amount 값만 가져오기
+                .sum(); // 합산
+
         return GetPaymentDTO.PaymentList.builder()
+                .totalAmount(totalAmount) // 총 금액 추가
                 .payments(paymentDetails)
                 .build();
     }

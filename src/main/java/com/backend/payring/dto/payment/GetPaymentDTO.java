@@ -27,6 +27,7 @@ public class GetPaymentDTO {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class PaymentList {
+        private Integer totalAmount;
         private List<PaymentDetail> payments;
     }
 }

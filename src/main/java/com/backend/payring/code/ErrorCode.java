@@ -87,6 +87,7 @@ public enum ErrorCode {
     /**
      * 방 관련
      */
+    NOT_ROOM_MEMBER(HttpStatus.FORBIDDEN, "해당 방의 멤버가 아닙니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."),
     ALREADY_INVITED_MEMBER(HttpStatus.BAD_REQUEST, "이미 초대된 멤버입니다."),
     ALREADY_JOINED_MEMBER(HttpStatus.BAD_REQUEST, "이미 참여한 멤버입니다.")

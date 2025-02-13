@@ -56,6 +56,21 @@ public class RoomServiceImpl implements RoomService{
         return RoomConverter.toRes(room);
     }
 
+    @Override
+    public RoomDTO.DetailRes getRoomDetail(Long userId, Long roomId) {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
+
+        boolean isMember = room.getTeamMembers().stream()
+                .anyMatch(member -> member.getUser().getId().equals(userId) && member.getIsJoin());
+
+        if (!isMember) {
+            throw new RoomException(ErrorCode.NOT_ROOM_MEMBER);
+        }
+
+        return RoomConverter.toRes(room);
+    }
+
     @Transactional
     public void deleteRoom(Long userId, Long roomId) {
         RoomEntity room = roomRepository.findById(roomId)
@@ -164,6 +179,68 @@ public class RoomServiceImpl implements RoomService{
         }
 
         room.getTeamMembers().remove(member);
+    }
+
+    @Override
+    public List<TeamMemberDTO.Res> getRoomMembers(Long userId, Long roomId) {
+        RoomEntity room = roomRepository.findById(roomId)
+                .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
+
+        boolean isMember = room.getTeamMembers().stream()
+                .anyMatch(member -> member.getUser().getId().equals(userId) && member.getIsJoin());
+
+        if (!isMember) {
+            throw new RoomException(ErrorCode.NOT_ROOM_MEMBER);
+        }
+
+        // 멤버 목록 반환
+        return room.getTeamMembers().stream()
+                .map(member -> TeamMemberDTO.Res.builder()
+                        .teamMemberId(member.getId())
+                        .userId(member.getUser().getId())
+                        .userName(member.getUser().getUserName())
+                        .email(member.getUser().getEmail())
+                        .profileImage(member.getUser().getProfileImage())
+                        .isOwner(member.getIsOwner())
+                        .isJoin(member.getIsJoin())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoomDTO.RoomList> getRoomList(Long userId) {
+        List<Long> roomIds = teamMemberRepository.findRoomIdsByUserId(userId);
+
+        return roomIds.stream()
+                .map(roomId -> {
+                    RoomEntity room = roomRepository.findById(roomId)
+                            .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
+
+                    // 해당 방에서 사용자가 방장인지 확인
+                    boolean isOwner = room.getTeamMembers().stream()
+                            .filter(member -> member.getUser().getId().equals(userId))
+                            .findFirst()
+                            .map(TeamMemberEntity::getIsOwner)
+                            .orElse(false);
+
+                    // 참여 중인 멤버 수 계산 (초대는 수락했지만 아직 참여하지 않은 멤버 제외)
+                    long memberCount = room.getTeamMembers().stream()
+                            .filter(TeamMemberEntity::getIsJoin)
+                            .count();
+
+                    return RoomDTO.RoomList.builder()
+                            .roomId(room.getId())
+                            .roomName(room.getRoomName())
+                            .roomImage(room.getRoomImage())
+                            .roomStatus(room.getRoomStatus())
+                            .startedAt(room.getStartedAt())
+                            .endedAt(room.getEndedAt())
+                            .totalAmount(room.getTotalAmount())
+                            .memberCount((int) memberCount)
+                            .isOwner(isOwner)
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
     @Override

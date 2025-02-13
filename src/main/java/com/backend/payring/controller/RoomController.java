@@ -57,6 +57,50 @@ public class RoomController {
     }
 
     @Operation(
+            summary = "방 목록 조회 API",
+            description = "참여 중인 모든 방 목록을 조회합니다."
+    )
+    @GetMapping
+    public ResponseEntity<ResponseDTO<List<RoomDTO.RoomList>>> getRoomList(
+            @AuthenticationPrincipal UserEntity user
+    ) {
+        List<RoomDTO.RoomList> res = roomService.getRoomList(user.getId());
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_ROOM_LIST.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_ROOM_LIST, res));
+    }
+
+    @Operation(
+            summary = "방 상세 조회 API",
+            description = "특정 방의 상세 정보를 조회합니다.."
+    )
+    @GetMapping("/{roomId}")
+    public ResponseEntity<ResponseDTO<RoomDTO.DetailRes>> getRoomDetail(
+            @AuthenticationPrincipal UserEntity user,
+            @PathVariable Long roomId
+    ) {
+        RoomDTO.DetailRes res = roomService.getRoomDetail(user.getId(), roomId);
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_ROOM.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_ROOM, res));
+    }
+
+    @Operation(
+            summary = "방 멤버 목록 조회 API",
+            description = "해당 방의 멤버 목록을 조회합니다."
+    )
+    @GetMapping("/{roomId}/members")
+    public ResponseEntity<ResponseDTO<List<TeamMemberDTO.Res>>> getRoomMembers(
+            @AuthenticationPrincipal UserEntity user,
+            @PathVariable Long roomId
+    ) {
+        List<TeamMemberDTO.Res> res = roomService.getRoomMembers(user.getId(), roomId);
+        return ResponseEntity
+                .status(ResponseCode.SUCCESS_RETRIEVE_ROOM_MEMBERS.getStatus().value())
+                .body(new ResponseDTO<>(ResponseCode.SUCCESS_RETRIEVE_ROOM_MEMBERS, res));
+    }
+
+    @Operation(
             summary = "멤버 초대 API",
             description = "새로운 멤버를 초대합니다."
     )

@@ -28,7 +28,7 @@ public class UserController {
     private final UserRepository userRepository;
 
     @Operation(
-            summary = "유저 정보 조회 API",
+            summary = "유저 정보 조회 API | 은서",
             description = "마이페이지에 보일 유저 정보를 조회합니다."
     )
     @GetMapping()
@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @Operation(
-            summary = "유저 정보 수정 API",
+            summary = "유저 정보 수정 API | 은서",
             description = "userName, payUrl 유저 정보를 수정합니다."
     )
     @PatchMapping()

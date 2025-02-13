@@ -21,7 +21,7 @@ public class AuthController {
     private final UserRepository userRepository;
 
     @Operation(
-            summary = "이메일 인증번호 요청 API",
+            summary = "이메일 인증번호 요청 API | 희원",
             description = "이메일 인증번호 코드를 요청합니다. 이때 유저가 생성됩니다."
     )
     @PostMapping("/email/verify/send")
@@ -34,7 +34,7 @@ public class AuthController {
 
 
     @Operation(
-            summary = "인증번호 인증 API",
+            summary = "인증번호 인증 API | 희원",
             description = "인증번호를 입력하여 이메일 인증을 완료합니다."
     )
     @PostMapping("/email/verify")
@@ -46,7 +46,7 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "회원가입 API",
+            summary = "회원가입 API | 희원",
             description = "회원가입을 진행합니다."
     )
     @PostMapping("/signup")
@@ -61,7 +61,7 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "로그인 API",
+            summary = "로그인 API | 희원, 은서",
             description = "로그인하여 토큰을 얻습니다."
     )
     @PostMapping("/login")

@@ -22,7 +22,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @Operation(
-            summary = "기간별 방별 정산 현황 조회 API",
+            summary = "기간별 방별 정산 현황 조회 API | 은서",
             description = "기간 내에 송금해야 하는 금액, 송금해야 하는 금액을 조회합니다."
     )
     @GetMapping("/status")

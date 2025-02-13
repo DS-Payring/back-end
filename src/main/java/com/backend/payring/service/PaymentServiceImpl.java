@@ -98,6 +98,10 @@ public class PaymentServiceImpl implements PaymentService {
         PaymentEntity payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new PaymentException(ErrorCode.PAYMENT_NOT_FOUND));
 
+        if (!payment.getRoom().getRoomStatus().equals(RoomStatus.COLLECTING)) {
+            throw new RoomException(ErrorCode.NOT_COLLECTING);
+        }
+
         paymentRepository.delete(payment);
     }
 

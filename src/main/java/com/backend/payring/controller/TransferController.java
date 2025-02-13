@@ -25,7 +25,7 @@ public class TransferController {
     private final TransferService transferService;
 
     @Operation(
-            summary = "송금하는 사람의 정보 조회 API",
+            summary = "송금하는 사람의 정보 조회 API | 은서",
             description = "송금하는 사람에게 송금하기 위한 상세 정보를 조회합니다."
     )
     @GetMapping("/transfers/{transferId}/receiver-info")
@@ -39,7 +39,7 @@ public class TransferController {
     }
 
     @Operation(
-            summary = "송금 인증 API",
+            summary = "송금 인증 API | 은서",
             description = "이미지를 업로드하여 ocr 기술을 통해 송금을 인증합니다. 수취인, 금액이 일치하지 않으면 송금이 인증되지 않습니다."
     )
     // userId 빼기
@@ -62,7 +62,7 @@ public class TransferController {
     }
 
     @Operation(
-            summary = "내가 보낸 송금 리스트 조회 + 내가 보내지 않은 송금 리스트 조회 API",
+            summary = "내가 보낸 송금 리스트 조회 + 내가 보내지 않은 송금 리스트 조회 API | 은서",
             description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
     )
     @GetMapping("/{roomId}/transfers/send")
@@ -82,7 +82,7 @@ public class TransferController {
     }
 
     @Operation(
-            summary = "내가 받은 송금 리스트 조회 + 내가 받지 않은 송금 리스트 조회 API",
+            summary = "내가 받은 송금 리스트 조회 + 내가 받지 않은 송금 리스트 조회 API | 은서",
             description = "내가 받은 송금 리스트와 내가 받지 않은 송금 리스트를 조회합니다."
     )
     @GetMapping("/{roomId}/transfers/receive") // userId 지우기

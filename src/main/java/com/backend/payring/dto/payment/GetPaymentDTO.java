@@ -20,6 +20,7 @@ public class GetPaymentDTO {
         private Boolean isTransfer;
         private Long roomId;
         private Long userId;
+        private Boolean isWriter;
     }
 
     @Getter

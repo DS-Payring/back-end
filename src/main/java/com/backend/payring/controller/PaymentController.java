@@ -55,9 +55,16 @@ public class PaymentController {
             description = "방별 정산 금액 요청을 모두 조회합니다."
     )
     @GetMapping("/{roomId}/payments")
-    public ResponseEntity<ResponseDTO<?>> getPaymentList (@PathVariable("roomId") Long roomId) {
+    public ResponseEntity<ResponseDTO<?>> getPaymentList (
+            @PathVariable("roomId") Long roomId,
+            @AuthenticationPrincipal UserEntity user
+    ) {
 
-        GetPaymentDTO.PaymentList res = paymentService.getPaymentList(roomId);
+        if (user == null) {
+            throw new UserException(ErrorCode.USER_NOT_FOUND);
+        }
+
+        GetPaymentDTO.PaymentList res = paymentService.getPaymentList(roomId, user);
 
         return ResponseEntity
                 .status(ResponseCode.SUCCESS_RETRIEVE_PAYMENT.getStatus().value())

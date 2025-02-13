@@ -44,19 +44,30 @@ public class PaymentConverter {
                 .build();
     }
 
-    public static GetPaymentDTO.PaymentList toPaymentList(List<PaymentEntity> payments) {
+    public static GetPaymentDTO.PaymentList toPaymentList(List<PaymentEntity> payments, Long currentUserId) {
         List<GetPaymentDTO.PaymentDetail> paymentDetails = payments.stream()
-                .map(PaymentConverter::toPaymentDetail)
+                .map(payment -> GetPaymentDTO.PaymentDetail.builder()
+                        .id(payment.getId())
+                        .amount(payment.getAmount())
+                        .title(payment.getTitle())
+                        .memo(payment.getMemo())
+                        .paymentImage(payment.getPaymentImage())
+                        .isTransfer(payment.getIsTransfer())
+                        .roomId(payment.getRoom().getId())
+                        .userId(payment.getUser().getId())
+                        .isWriter(payment.getUser().getId().equals(currentUserId)) // 작성자 여부 확인
+                        .build())
                 .collect(Collectors.toList());
 
         // totalAmount 계산
         int totalAmount = payments.stream()
-                .mapToInt(PaymentEntity::getAmount) // amount 값만 가져오기
-                .sum(); // 합산
+                .mapToInt(PaymentEntity::getAmount)
+                .sum();
 
         return GetPaymentDTO.PaymentList.builder()
-                .totalAmount(totalAmount) // 총 금액 추가
+                .totalAmount(totalAmount)
                 .payments(paymentDetails)
                 .build();
     }
+
 }

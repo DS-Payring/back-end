@@ -74,13 +74,17 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public GetPaymentDTO.PaymentList getPaymentList(Long roomId) {
+    public GetPaymentDTO.PaymentList getPaymentList(Long roomId, UserEntity user) {
         RoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
 
+        Boolean isCollecting = true;
+        if(!room.getRoomStatus().equals(RoomStatus.COLLECTING)) {
+            isCollecting = false;
+        }
         List<PaymentEntity> payments = paymentRepository.findAllByRoomOrderByIdDesc(room);
 
-        return PaymentConverter.toPaymentList(payments);
+        return PaymentConverter.toPaymentList(payments, user.getId(), isCollecting);
     }
 
     @Override

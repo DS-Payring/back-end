@@ -13,7 +13,7 @@ import java.util.List;
 public interface PaymentService {
     PaymentCreateDTO.Res createPayment(PaymentCreateDTO.Req req, MultipartFile image, UserEntity user);
 
-    GetPaymentDTO.PaymentList getPaymentList(Long roomId);
+    GetPaymentDTO.PaymentList getPaymentList(Long roomId, UserEntity user);
 
     GetPaymentDTO.PaymentDetail getPaymentDetail(Long paymentId);
 

@@ -22,7 +22,7 @@ public class TempController {
     private final TempService tempService;
 
     @Operation(
-            summary = "예시 API 제목",
+            summary = "예시 API 제목 (무시하셔도 됩니다! 예시 형식입니다)",
             description = "예시 API 상세 설명"
     )
     @PostMapping

@@ -38,7 +38,6 @@ public class PaymentConverter {
                 .title(payment.getTitle())
                 .memo(payment.getMemo())
                 .paymentImage(payment.getPaymentImage())
-                .isTransfer(payment.getIsTransfer())
                 .roomId(payment.getRoom().getId()) // N + 1
                 .userId(payment.getUser().getId())
                 .build();
@@ -55,7 +54,6 @@ public class PaymentConverter {
                             .title(payment.getTitle())
                             .memo(payment.getMemo())
                             .paymentImage(payment.getPaymentImage())
-                            .isTransfer(payment.getIsTransfer())
                             .roomId(payment.getRoom().getId())
                             .userId(payment.getUser().getId())
                             .isWriter(isWriter) // isCollecting이 false면 무조건 false

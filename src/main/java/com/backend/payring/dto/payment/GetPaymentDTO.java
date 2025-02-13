@@ -17,7 +17,6 @@ public class GetPaymentDTO {
         private String title;
         private String memo;
         private String paymentImage;
-        private Boolean isTransfer;
         private Long roomId;
         private Long userId;
         private Boolean isWriter;

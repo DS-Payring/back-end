@@ -9,11 +9,14 @@ import java.util.List;
 
 public interface RoomService {
     RoomDTO.DetailRes createRoom(Long userId, RoomDTO.CreateReq req);
+    RoomDTO.DetailRes getRoomDetail(Long userId, Long roomId);
     void deleteRoom(Long userId, Long roomId);
     void inviteMember(Long userId, TeamMemberDTO.InviteReq req);
     void acceptInvitation(Long userId, Long roomId);
     void rejectInvitation(Long userId, Long roomId);
     void leaveRoom(Long userId, Long roomId);
+    List<TeamMemberDTO.Res> getRoomMembers(Long userId, Long roomId);
+    List<RoomDTO.RoomList> getRoomList(Long userId);
     List<RoomDTO.InvitedRoomList> getInvitedRooms(Long userId);
     DurationStatusDTO.DurationStatus getDurationStatus(Integer day, UserEntity user);
 }

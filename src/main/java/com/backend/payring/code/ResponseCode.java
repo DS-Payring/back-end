@@ -28,6 +28,9 @@ public enum ResponseCode {
     SUCCESS_ACCEPT_INVITATION(HttpStatus.OK, "초대 수락에 성공했습니다."),
     SUCCESS_REJECT_INVITATION(HttpStatus.OK, "초대 거절에 성공했습니다."),
     SUCCESS_LEAVE_ROOM(HttpStatus.OK, "방 나가기에 성공했습니다."),
+    SUCCESS_RETRIEVE_ROOM_LIST(HttpStatus.OK, "방 목록 조회에 성공했습니다."),
+    SUCCESS_RETRIEVE_ROOM(HttpStatus.OK, "방 상세 조회에 성공했습니다."),
+    SUCCESS_RETRIEVE_ROOM_MEMBERS(HttpStatus.OK, "방 멤버 목록 조회에 성공했습니다."),
     SUCCESS_RETRIEVE_INVITED_ROOMS(HttpStatus.OK, "초대된 방 목록 조회에 성공했습니다."),
 
     /**

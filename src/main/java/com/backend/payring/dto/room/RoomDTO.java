@@ -55,4 +55,20 @@ public class RoomDTO {
         private String roomImage;
         private LocalDateTime invitedAt;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RoomList {
+        private Long roomId;
+        private String roomName;
+        private String roomImage;
+        private RoomStatus roomStatus;
+        private LocalDateTime startedAt;
+        private LocalDateTime endedAt;
+        private Integer totalAmount;
+        private Integer memberCount;
+        private Boolean isOwner;
+    }
 }

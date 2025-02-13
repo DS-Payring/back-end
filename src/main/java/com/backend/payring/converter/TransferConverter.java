@@ -68,13 +68,15 @@ public class TransferConverter {
                 .build();
     }
 
-    public static UnCompletedUserDTO.ReceiverInfo toReceiverInfo(Long receiverId, TransferEntity transfer, Integer amount) {
+    public static UnCompletedUserDTO.ReceiverInfo toReceiverInfo(Long receiverId, TransferEntity transfer, Integer amount, Long userId) {
         return UnCompletedUserDTO.ReceiverInfo.builder()
                 .receiverId(receiverId)
                 .receiverName(transfer.getReceiver().getUserName())
                 .amount(amount)
+                .isSenderForMe(receiverId.equals(userId)) // 본인이 수취인인지 확인하여 true/false 설정
                 .build();
     }
+
 
     public static UserTransferStatusDTO.NotSent toNotSent(TransferEntity transfer) {
         return UserTransferStatusDTO.NotSent.builder()

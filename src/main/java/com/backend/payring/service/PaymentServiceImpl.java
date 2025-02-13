@@ -235,7 +235,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UnCompletedUserDTO.SenderInfo> getUnFinishedTeamMemberList(Long roomId) {
+    public List<UnCompletedUserDTO.SenderInfo> getUnFinishedTeamMemberList(Long roomId, Long userId) {
         // 아직 정산하지 않은 송금 내역
         List<TransferEntity> unCompletedTransfers = transferRepository.findUnCompletedTransfers(roomId);
 
@@ -253,7 +253,7 @@ public class PaymentServiceImpl implements PaymentService {
 
             // 송금해야 할 대상 추가
             UnCompletedUserDTO.SenderInfo senderInfo = senderInfoMap.get(senderId);
-            senderInfo.getReceiverInfos().add(TransferConverter.toReceiverInfo(receiverId, transfer, amount));
+            senderInfo.getReceiverInfos().add(TransferConverter.toReceiverInfo(receiverId, transfer, amount, userId));
 
             // 총 송금해야 하는 금액
             senderInfo.updateTotalLeftAmount(senderInfo.getTotalLeftAmount() + amount);
@@ -261,6 +261,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         return new ArrayList<>(senderInfoMap.values());
     }
+
 
     @Override
     @Transactional(readOnly = true)

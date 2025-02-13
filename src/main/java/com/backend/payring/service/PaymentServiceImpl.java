@@ -42,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
-    public PaymentCreateDTO.Res createPayment(PaymentCreateDTO.Req req, MultipartFile image) {
+    public PaymentCreateDTO.Res createPayment(PaymentCreateDTO.Req req, MultipartFile image, UserEntity user) {
         String url = null;
 
         // 이미지를 업로드했다면 s3에 업로드
@@ -57,9 +57,6 @@ public class PaymentServiceImpl implements PaymentService {
         } else {
             log.info("업로드할 파일이 제공되지 않았습니다.");
         }
-
-        UserEntity user = userRepository.findById(req.getUserId())
-                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
 
         RoomEntity room = roomRepository.findById(req.getRoomId())
                 .orElseThrow(() -> new RoomException(ErrorCode.ROOM_NOT_FOUND));
@@ -259,12 +256,12 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(readOnly = true)
-    public UserTransferStatusDTO.UserStatus getUserTransferStatus(Long roomId, Long userId) {
+    public UserTransferStatusDTO.UserStatus getUserTransferStatus(Long roomId, UserEntity user) {
         // isComplete == false & sender == userId & roomId
-        List<TransferEntity> notSentTransfers = transferRepository.findByRoomIdAndSenderIdAndIsCompleteFalse(roomId, userId);
+        List<TransferEntity> notSentTransfers = transferRepository.findByRoomIdAndSenderAndIsCompleteFalse(roomId, user);
 
         // isComplete == false & receiver == user & roomId
-        List<TransferEntity> notReceivedTransfers = transferRepository.findByRoomIdAndReceiverIdAndIsCompleteFalse(roomId, userId);
+        List<TransferEntity> notReceivedTransfers = transferRepository.findByRoomIdAndReceiverAndIsCompleteFalse(roomId, user);
 
         // 아직 보내지 않은 정산 리스트
         List<UserTransferStatusDTO.NotSent> notSentList = notSentTransfers.stream()

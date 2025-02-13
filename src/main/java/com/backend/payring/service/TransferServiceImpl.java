@@ -48,7 +48,7 @@ public class TransferServiceImpl implements TransferService{
 
     @Override
     @Transactional
-    public VerifyTransferDTO.Res verifyTransfer(Long transferId, Long userId, MultipartFile image) {
+    public VerifyTransferDTO.Res verifyTransfer(Long transferId, UserEntity user, MultipartFile image) {
         // 이미지가 없으면 예외 처리
         if (image == null) {
             throw new TransferException(ErrorCode.IMAGE_REQUIRED);
@@ -58,7 +58,7 @@ public class TransferServiceImpl implements TransferService{
                 .orElseThrow(() -> new TransferException(ErrorCode.TRANSFER_NOT_FOUND));
 
         // sender와 일치하지 않으면 예외 처리
-        if (!transfer.getSender().getId().equals(userId)) {
+        if (!transfer.getSender().getId().equals(user.getId())) {
             throw new TransferException(ErrorCode.NOT_SENDER);
         }
 
@@ -159,10 +159,10 @@ public class TransferServiceImpl implements TransferService{
 
     @Override
     @Transactional(readOnly = true)
-    public SendDTO.Sender getSenderTransferStatus(Long roomId, Long userId) {
-        List<TransferEntity> notSentTransfers = transferRepository.findByRoomIdAndSenderIdAndIsCompleteFalse(roomId, userId);
+    public SendDTO.Sender getSenderTransferStatus(Long roomId, UserEntity user) {
+        List<TransferEntity> notSentTransfers = transferRepository.findByRoomIdAndSenderAndIsCompleteFalse(roomId, user);
 
-        List<TransferEntity> sentTransfers = transferRepository.findByRoomIdAndSenderIdAndIsCompleteTrue(roomId, userId);
+        List<TransferEntity> sentTransfers = transferRepository.findByRoomIdAndSenderAndIsCompleteTrue(roomId, user);
 
         // 아직 보내지 않은 송금 리스트
         List<UserTransferStatusDTO.NotSent> notSentList = notSentTransfers.stream()
@@ -179,10 +179,10 @@ public class TransferServiceImpl implements TransferService{
 
     @Override
     @Transactional(readOnly = true)
-    public ReceiveDTO.Receiver getReceiverTransferStatus(Long roomId, Long userId) {
-        List<TransferEntity> notReceivedTransfers = transferRepository.findByRoomIdAndReceiverIdAndIsCompleteFalse(roomId, userId);
+    public ReceiveDTO.Receiver getReceiverTransferStatus(Long roomId, UserEntity user) {
+        List<TransferEntity> notReceivedTransfers = transferRepository.findByRoomIdAndReceiverAndIsCompleteFalse(roomId, user);
 
-        List<TransferEntity> receivedTransfers = transferRepository.findByRoomIdAndReceiverIdAndIsCompleteTrue(roomId, userId);
+        List<TransferEntity> receivedTransfers = transferRepository.findByRoomIdAndReceiverAndIsCompleteTrue(roomId, user);
 
         List<UserTransferStatusDTO.NotReceived> notReceivedList = notReceivedTransfers.stream()
                 .map(TransferConverter::toNotReceived)

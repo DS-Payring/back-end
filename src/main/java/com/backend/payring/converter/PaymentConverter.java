@@ -44,19 +44,23 @@ public class PaymentConverter {
                 .build();
     }
 
-    public static GetPaymentDTO.PaymentList toPaymentList(List<PaymentEntity> payments, Long currentUserId) {
+    public static GetPaymentDTO.PaymentList toPaymentList(List<PaymentEntity> payments, Long currentUserId, Boolean isCollecting) {
         List<GetPaymentDTO.PaymentDetail> paymentDetails = payments.stream()
-                .map(payment -> GetPaymentDTO.PaymentDetail.builder()
-                        .id(payment.getId())
-                        .amount(payment.getAmount())
-                        .title(payment.getTitle())
-                        .memo(payment.getMemo())
-                        .paymentImage(payment.getPaymentImage())
-                        .isTransfer(payment.getIsTransfer())
-                        .roomId(payment.getRoom().getId())
-                        .userId(payment.getUser().getId())
-                        .isWriter(payment.getUser().getId().equals(currentUserId)) // 작성자 여부 확인
-                        .build())
+                .map(payment -> {
+                    boolean isWriter = isCollecting && payment.getUser().getId().equals(currentUserId); // isCollecting이 false면 무조건 false
+
+                    return GetPaymentDTO.PaymentDetail.builder()
+                            .id(payment.getId())
+                            .amount(payment.getAmount())
+                            .title(payment.getTitle())
+                            .memo(payment.getMemo())
+                            .paymentImage(payment.getPaymentImage())
+                            .isTransfer(payment.getIsTransfer())
+                            .roomId(payment.getRoom().getId())
+                            .userId(payment.getUser().getId())
+                            .isWriter(isWriter) // isCollecting이 false면 무조건 false
+                            .build();
+                })
                 .collect(Collectors.toList());
 
         // totalAmount 계산
@@ -69,5 +73,6 @@ public class PaymentConverter {
                 .payments(paymentDetails)
                 .build();
     }
+
 
 }

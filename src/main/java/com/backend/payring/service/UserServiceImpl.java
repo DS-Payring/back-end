@@ -2,6 +2,7 @@ package com.backend.payring.service;
 
 import com.backend.payring.code.ErrorCode;
 import com.backend.payring.converter.UserConverter;
+import com.backend.payring.dto.user.UpdateUserDTO;
 import com.backend.payring.dto.user.UserDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.UserEntity;
@@ -106,5 +107,25 @@ public class UserServiceImpl {
 
         String token = jwtUtil.createJwt(user.getId().toString());
         return UserConverter.toRes(user, user.getAccounts(), token);
+    }
+
+    @Transactional
+    public UpdateUserDTO.Res updateUseInfo(UserEntity user, UpdateUserDTO.Req req) {
+        UserEntity fullInfoUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        fullInfoUser.updateUserInfo(req.getUserName(), req.getPayUrl());
+
+        userRepository.save(fullInfoUser);
+
+        return UserConverter.toUpdteUserRes(fullInfoUser);
+    }
+
+    @Transactional(readOnly = true)
+    public UpdateUserDTO.Res getUserInfo(UserEntity user) {
+        UserEntity fullInfoUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UserException(ErrorCode.USER_NOT_FOUND));
+
+        return UserConverter.toUpdteUserRes(fullInfoUser);
     }
 }

@@ -1,6 +1,7 @@
 package com.backend.payring.converter;
 
 import com.backend.payring.dto.transfer.CompletedUserDTO;
+import com.backend.payring.dto.user.UpdateUserDTO;
 import com.backend.payring.dto.user.UserDTO;
 import com.backend.payring.entity.AccountEntity;
 import com.backend.payring.entity.UserEntity;
@@ -53,6 +54,16 @@ public class UserConverter {
         return users.stream()
                 .map(UserConverter::toUserInfo)
                 .collect(Collectors.toList());
+    }
+
+    public static UpdateUserDTO.Res toUpdteUserRes (UserEntity user) {
+        return UpdateUserDTO.Res.builder()
+                .userName(user.getUserName())
+                .userId(user.getId())
+                .email(user.getEmail())
+                .payUrl(user.getPayUrl())
+                .profileImage(user.getProfileImage())
+                .build();
     }
 
 }

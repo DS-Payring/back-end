@@ -57,6 +57,22 @@ public class RoomEntity extends BaseEntity{
     @OneToMany(mappedBy = "room",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PaymentEntity> payments = new ArrayList<>();
 
+    @Builder
+    public RoomEntity(String roomName, RoomStatus roomStatus, String roomImage, Integer settleAmount, Integer totalAmount) {
+        this.roomName = roomName;
+        this.roomStatus = roomStatus;
+        this.roomImage = roomImage;
+        this.settleAmount = settleAmount;
+        this.totalAmount = totalAmount;
+        this.teamMembers = new ArrayList<>();
+        this.transfers = new ArrayList<>();
+        this.payments = new ArrayList<>();
+    }
+
+    public List<TeamMemberEntity> getTeamMembers() {
+        return teamMembers != null ? teamMembers : new ArrayList<>();
+    }
+
     // 정산 빼기
     public void subtractSettleAmount(Integer subtractAmount) {
         if (this.settleAmount < subtractAmount) {

@@ -71,12 +71,25 @@ public enum ErrorCode {
      * 회원 가입 관련
      */
     DUPLICATE_EMAIL(HttpStatus.BAD_REQUEST, "이미 존재하는 이메일입니다."),
-
     INVALID_VERIFICATION_CODE(HttpStatus.BAD_REQUEST, "잘못된 인증 코드입니다."),
-
     EMAIL_NOT_VERIFIED(HttpStatus.UNAUTHORIZED, "이메일 인증이 완료되지 않았습니다."),
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호입니다."),
 
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "잘못된 비밀번호입니다.")
+    /**
+     * 방 관련
+     */
+    ROOM_OWNER_NOT_FOUND(HttpStatus.NOT_FOUND, "방장을 찾을 수 없습니다."),
+    NOT_ROOM_OWNER(HttpStatus.FORBIDDEN, "방장만 이 작업을 수행할 수 있습니다."),
+    CANNOT_DELETE_ROOM(HttpStatus.BAD_REQUEST, "정산이 시작된 방은 삭제할 수 없습니다."),
+    CANNOT_LEAVE_ROOM(HttpStatus.BAD_REQUEST, "정산이 시작된 방은 나갈 수 없습니다."),
+    OWNER_CANNOT_LEAVE(HttpStatus.BAD_REQUEST, "방장은 방을 나갈 수 없습니다."),
+
+    /**
+     * 방 관련
+     */
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "멤버를 찾을 수 없습니다."),
+    ALREADY_INVITED_MEMBER(HttpStatus.BAD_REQUEST, "이미 초대된 멤버입니다."),
+    ALREADY_JOINED_MEMBER(HttpStatus.BAD_REQUEST, "이미 참여한 멤버입니다.")
 
     ;
 

@@ -39,7 +39,6 @@ public class EmailServiceImpl implements EmailService{
     }
 
     public void sendReminder(String to, String name, String receiverName, String room, Integer amount) throws MessagingException {
-        // Thymeleaf 템플릿을 통해 이메일 내용 생성
         Context context = new Context();
         context.setVariable("name", name);
         context.setVariable("room", room);
